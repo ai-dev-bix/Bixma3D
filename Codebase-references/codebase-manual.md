@@ -2028,6 +2028,225 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 277155: core/scripts/admin/wtw_adminforms.js** (Admin Form Management)
+**Purpose**: Administrative interface form management system for full-page admin screens
+
+**Functions**:
+
+1. **`openFullPageForm(zpageid, zsetcategory, zitem, zitemname, zitemnamepath, zpreviewname)`** - Form router
+   - Central routing function for all admin full-page forms
+   - Handles form titles, breadcrumbs, and page-specific initialization
+   - Supports multiple form types: dashboard, media library, users, plugins, settings
+   - **Called by**: Admin menu system for form navigation
+
+2. **`closeFullPageForm()`** - Form cleanup and closing
+   - Closes full-page forms and returns to main admin interface
+   - **Called by**: Form close buttons and navigation
+
+**Form Types Managed**:
+- **Dashboard** - Platform statistics and overview
+- **Media Library** - File management and upload interface
+- **Users** - User management and role administration
+- **Plugins** - Plugin management and updates
+- **Settings** - Server settings, domains, API keys, web aliases
+- **Error Log** - Error tracking and debugging
+- **Feedback** - User feedback collection
+
+**Key Features**:
+- **Dynamic Titles** - Context-aware page titles and breadcrumbs
+- **Plugin Integration** - Extensible form system for plugin forms
+- **Responsive Design** - Window size adaptation for forms
+- **Loading States** - User feedback during form initialization
+- **Category Management** - Hierarchical form organization
+
+**Cross-references**:
+- **Used by**: Admin menu system for form navigation
+- **Integrates with**: Plugin system for extensible forms
+- **Calls**: Specific form functions for each admin area
+- **Critical for**: Admin interface navigation and form management
+
+---
+
+### **File 369743: core/scripts/molds/wtw_3dforms.js** (3D Form Components)
+**Purpose**: 3D form field creation and text input system for immersive interfaces
+
+**Functions**:
+
+1. **`focusText(zeditdone)`** - 3D text input focus management
+   - Creates dynamic HTML input fields for 3D text objects
+   - Handles different input types: text, password, checkbox
+   - Manages login form cookie integration for remember functionality
+   - **Called by**: 3D text object interaction system
+
+**3D Form Features**:
+- **Dynamic Input Creation** - Creates HTML inputs for 3D text fields
+- **Input Type Support** - Text, password, checkbox based on mold name
+- **Cookie Integration** - Remembers login credentials with local/global support
+- **Focus Management** - Proper focus handling for 3D-to-HTML input transition
+- **Security** - Base64 password storage in cookies
+
+**Input Field Types**:
+- **Text Fields** - Standard text input for 3D forms
+- **Password Fields** - Secure password input with masking
+- **Checkboxes** - Boolean input for 3D toggle elements
+- **Remember Functionality** - Persistent login credential storage
+
+**Cross-references**:
+- **Used by**: 3D login system and interactive forms
+- **Integrates with**: Cookie system for credential persistence
+- **Critical for**: 3D user interface and immersive form interactions
+
+---
+
+### **File 370115: core/scripts/molds/wtw_3dhtml.js** (3D HTML Integration)
+**Purpose**: Converts HTML web pages into 3D representations for immersive web browsing
+
+**Functions**:
+
+1. **`load3DWebpage(zmoldname, zwebaddress, zmolddef, zlenx, zleny, zlenz)`** - 3D web page conversion
+   - Loads external HTML pages and converts to 3D representation
+   - Processes HTML structure and creates 3D equivalent
+   - **Used by**: 3D web browsing and HTML-to-3D conversion
+
+2. **`getNodesAsArray(znode)`** - HTML DOM tree parsing
+   - Recursively parses HTML DOM into JavaScript array structure
+   - Extracts node types, IDs, names, and hierarchical relationships
+   - **Used by**: HTML-to-3D conversion process
+
+3. **`create3DPageBox(zmoldname, zhtmlarray, zmolddef, zlenx, zleny, zlenz)`** - 3D container creation
+   - Creates 3D container for HTML content representation
+   - Sets up transform node with position, rotation, scaling
+   - **Used by**: 3D web page rendering system
+
+4. **`createTag(ztag)`** - HTML tag to 3D element conversion
+   - Routes HTML tags to appropriate 3D representation functions
+   - **Used by**: HTML element conversion process
+
+**Key Features**:
+- **HTML Parsing** - Complete HTML document parsing and structure extraction
+- **3D Conversion** - Converts web pages into navigable 3D representations
+- **Spatial Mapping** - Maps HTML elements to 3D spatial positions
+- **Interactive 3D Web** - Creates immersive web browsing experience
+- **DOM Integration** - Bridges HTML DOM and 3D scene graph
+
+**Cross-references**:
+- **Uses**: Mold system **File 372127** for 3D object creation
+- **Integrates with**: AJAX system for web page loading
+- **Critical for**: 3D web browsing and HTML-to-3D conversion capabilities
+
+---
+
+### **File 15644: connect/websitems.php** (Web Content Items API)
+**Purpose**: RESTful API endpoint for retrieving hierarchical content items within 3D webs
+
+**Functions**:
+
+1. **Hierarchical Content Query** - Multi-union query system
+   - Retrieves molds, action zones, and connecting grids for a web
+   - Organizes content by category: Molds, 3D Webs, Action Zones
+   - Provides sorting by category and item type
+   - **Used by**: Admin interface for content management
+
+2. **Content Categorization** - Structured content organization
+   - Categories: Molds (content), 3D Webs (sub-webs), Action Zones (triggers)
+   - Includes parent-child relationships for nested content
+   - **Returns**: Categorized array of all web content items
+   - **Used by**: Content management and navigation interfaces
+
+**Key Features**:
+- **Multi-type Content** - Handles molds, connecting grids, and action zones
+- **Hierarchical Structure** - Parent-child relationships in 3D content
+- **Category Organization** - Logical grouping for admin interface
+- **Cross-reference Support** - Links between different content types
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Used by**: Admin content management and navigation
+- **Critical for**: Hierarchical content organization and management
+
+---
+
+### **File 15800: connect/wordpress.php** (WordPress Integration API)
+**Purpose**: RESTful API endpoint for WordPress and WooCommerce integration with authentication and store management
+
+**Functions**:
+
+1. **WordPress Authentication** - Cross-platform user authentication
+   - Handles WordPress user tokens and WTW user tokens
+   - Validates user credentials across platforms
+   - **Used by**: WordPress plugin integration
+
+2. **WooCommerce Store Integration** - E-commerce store connection
+   - Manages WooCommerce API keys and store configuration
+   - Handles store URLs, cart URLs, and product URLs
+   - **Used by**: Shopping plugin for e-commerce integration
+
+3. **3D Web Creation** - WordPress-to-3D web conversion
+   - Creates 3D communities and buildings from WordPress sites
+   - Handles web name validation and creation
+   - **Used by**: WordPress-to-3D conversion workflows
+
+**Key Features**:
+- **Cross-platform Authentication** - WordPress and WTW user integration
+- **E-commerce Integration** - Complete WooCommerce store connection
+- **Web Creation** - Automated 3D web creation from WordPress
+- **API Key Management** - Secure key storage and validation
+- **Multi-store Support** - Multiple WooCommerce store integration
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Integrates with**: Shopping plugin for e-commerce functionality
+- **Uses**: 3D Internet plugin for cross-platform features
+- **Critical for**: WordPress ecosystem integration
+
+---
+
+### **File 374973: core/scripts/prime/wtw_analytics.js** (Analytics System)
+**Purpose**: Google Analytics integration for 3D browsing tracking and user behavior analysis
+
+**Functions**:
+
+1. **`checkAnalytics(zactionzoneind)`** - Analytics trigger detection
+   - Checks if action zones have analytics IDs for tracking
+   - Triggers page views for different load zone levels
+   - Handles extreme, high, and normal load zone tracking
+   - **Called by**: Action zone system when zones are entered
+
+2. **`queueAnalytics(zactionzoneind, zdistancename)`** - Analytics queuing
+   - Queues analytics events for batch processing
+   - Alternative to immediate analytics tracking
+   - **Used by**: Performance optimization for analytics
+
+3. **`checkAnalyticsQueue()`** - Analytics queue processing
+   - Processes queued analytics events
+   - Removes processed events from queue
+   - **Called by**: Analytics processing loop
+
+4. **`trackPageView(zactionzoneind, zdistancename)`** - Page view tracking
+   - Processes page view events to Google Analytics
+   - Handles different content types (community, building, thing)
+   - Includes distance-based tracking for 3D navigation
+   - **Called by**: Analytics system for user behavior tracking
+
+**Analytics Categories**:
+- **Extreme Load Zones** - High-level area tracking
+- **High Load Zones** - Medium-distance area tracking  
+- **Normal Load Zones** - Close-proximity area tracking
+- **Content Types** - Community, building, and thing-specific tracking
+
+**Key Features**:
+- **3D-Specific Analytics** - Tracks 3D navigation and zone interactions
+- **Multi-level Tracking** - Different granularity based on load zones
+- **Queue System** - Performance-optimized analytics batching
+- **Content Type Tracking** - Specific tracking for different 3D content types
+
+**Cross-references**:
+- **Used by**: Action zone system **File 265765** for zone-based tracking
+- **Integrates with**: Google Analytics for user behavior analysis
+- **Critical for**: 3D user behavior analysis and platform optimization
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
