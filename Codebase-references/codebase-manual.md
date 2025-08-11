@@ -3496,6 +3496,78 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+## **ROOT FILES** (Main Entry Points)
+
+### **File 1: admin.php** (Admin Entry Point)
+**Purpose**: Main entry point for administrative interface with complete admin system initialization
+
+**Functions**:
+
+1. **Admin System Initialization** - Complete admin environment setup
+   - Loads all core admin classes: session, admin, menu, plugins
+   - Initializes plugin loader for admin-specific functionality
+   - **Called by**: Direct access for admin interface
+
+2. **Admin HTML Structure** - Complete admin page generation
+   - Generates HTML5 document structure with admin-specific elements
+   - Loads admin CSS, JavaScript, and menu systems
+   - Includes all admin menus: main, settings, profile, help, avatar, controls
+   - **Used by**: Admin users for platform administration
+
+**Cross-references**:
+- **Uses**: All admin classes **File 228442**, **File 248777**, **File 249214**
+- **Critical for**: Administrative interface and platform management
+
+---
+
+### **File 2: htaccess** (Server Configuration)
+**Purpose**: Apache server configuration for 3D file types and URL rewriting
+
+**Configuration Features**:
+- **3D File Types**: DDS, HDR, EXR, WASM, OBJ, GLB, GLTF, Babylon formats
+- **URL Rewriting**: Clean URLs with path routing to index.php
+- **Authorization**: HTTP authorization header handling
+- **File Serving**: Proper MIME types for 3D assets and WebAssembly
+
+**Critical for**: Server setup and 3D file serving
+
+---
+
+### **File 3: index.php** (Main Entry Point)
+**Purpose**: Primary entry point for browse mode with complete platform initialization
+
+**Functions**:
+
+1. **Platform Initialization** - Complete browse environment setup
+   - Loads core classes: session, plugins, menus
+   - Initializes plugin system for browse functionality
+   - **Called by**: All user access to the platform
+
+2. **Browse HTML Structure** - Complete browse page generation
+   - Generates HTML5 document structure with browse-specific elements
+   - Loads browse CSS, JavaScript, and menu systems
+   - Includes all user menus and interface components
+   - **Used by**: All users for 3D web browsing
+
+**Cross-references**:
+- **Uses**: Core classes **File 228442**, **File 249214**, **File 248777**
+- **Critical for**: Main platform access and 3D web browsing
+
+---
+
+### **File 4: LICENSE** (Legal Framework)
+**Purpose**: GNU GPL v3 license with third-party attributions
+
+**Legal Components**:
+- **GPL v3 License**: Open source license for platform distribution
+- **Copyright**: HTTP3D Inc. and contributors (2013-2022)
+- **Third-party Licenses**: BabylonJS Apache License 2.0
+- **Extended Licenses**: Located in `/core/scripts/engine/`
+
+**Critical for**: Legal compliance and open source distribution
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
