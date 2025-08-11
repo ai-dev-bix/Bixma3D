@@ -1861,6 +1861,255 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 - **Integrates with**: Upload system **File 257332** for media assets
 - **Critical for**: 3D content templates and asset management
 
+### **File 13066: connect/thingrecoveritems.php** (Thing Recovery API)
+**Purpose**: RESTful API endpoint for retrieving deleted thing molds for recovery operations
+
+**Functions**:
+
+1. **Deleted Item Retrieval** - Recovery system for deleted 3D objects
+   - Queries deleted thing molds with deletion timestamps
+   - Orders by deletion date for recent-first recovery
+   - **Used by**: Admin recovery interface for restoring deleted content
+
+2. **Recovery Data Formatting** - Structured recovery information
+   - Provides item ID, type, and shape information for recovery selection
+   - **Returns**: Array of recoverable items with metadata
+   - **Used by**: Recovery interface for item selection
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Integrates with**: Thing molds system **File 254614** for recovery operations
+- **Critical for**: Content recovery and data protection workflows
+
+---
+
+### **File 13797: connect/useravatar.php** (User Avatar Resolution API)
+**Purpose**: RESTful API endpoint for resolving user avatar information with complex fallback logic
+
+**Functions**:
+
+1. **Avatar Resolution Logic** - Multi-step avatar lookup system
+   - Primary: User avatar ID lookup
+   - Secondary: User ID latest avatar lookup  
+   - Tertiary: Avatar ID direct lookup
+   - Quaternary: Instance ID avatar lookup
+   - **Used by**: Avatar loading system for user representation
+
+2. **User Avatar Data Processing** - Complete avatar information retrieval
+   - Includes avatar metadata, positioning, animation settings
+   - Handles walk/turn speeds and animation parameters
+   - **Returns**: Complete avatar configuration for 3D rendering
+   - **Used by**: Avatar initialization and user representation
+
+**Key Features**:
+- **Fallback Logic** - 4-tier fallback system ensures avatar availability
+- **Anonymous Support** - Handles anonymous user avatars
+- **Instance Tracking** - Links avatars to specific browser instances
+- **Performance Settings** - Walk speed, turn speed, animation speed controls
+- **Version Management** - Avatar versioning with description tracking
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Integrates with**: Avatar system **File 228442** for avatar management
+- **Used by**: User avatar loading and multiplayer systems
+- **Critical for**: User representation and avatar persistence
+
+---
+
+### **File 14996: connect/webdomains.php** (Domain Management API)
+**Purpose**: RESTful API endpoint for web domain management and hosting configuration
+
+**Functions**:
+
+1. **Domain Listing by Role** - Role-based domain access
+   - Admin users: Access to all domains
+   - Host users: Access to owned domains and public hosting domains
+   - **Security**: Role-based access control
+   - **Used by**: Domain management interface
+
+2. **Domain Configuration Data** - Complete domain settings
+   - Domain names, HTTPS enforcement, hosting permissions
+   - Pricing, expiration dates, and hosting duration
+   - **Returns**: Array of domain configurations
+   - **Used by**: Hosting management and domain administration
+
+**Key Features**:
+- **Multi-role Support** - Different access levels for Admin vs Host users
+- **Hosting Management** - Domain hosting permissions and pricing
+- **HTTPS Enforcement** - Security configuration per domain
+- **Expiration Tracking** - Domain expiration date management
+- **Pricing Integration** - Hosting cost and duration tracking
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Used by**: Domain management and hosting administration
+- **Critical for**: Multi-domain hosting and domain configuration
+
+---
+
+### **File 15100: connect/webnamecheck.php** (Web Name Validation API)
+**Purpose**: RESTful API endpoint for validating web aliases and checking name availability
+
+**Functions**:
+
+1. **Reserved Word Validation** - Protected name system
+   - Checks against reserved words: 'wtw', 'walktheweb', 'http3d', 'https3d'
+   - Prevents use of platform-specific terminology
+   - **Security**: Protects platform branding and functionality
+   - **Used by**: Web alias creation and validation
+
+2. **Availability Check** - Web alias uniqueness validation
+   - Checks existing web aliases for conflicts
+   - Validates both community and building publish names
+   - **Returns**: Availability status and error messages
+   - **Used by**: Web alias creation forms
+
+**Key Features**:
+- **Brand Protection** - Reserved word system protects platform identity
+- **Uniqueness Validation** - Prevents duplicate web aliases
+- **Cross-type Checking** - Validates across communities and buildings
+- **Real-time Validation** - Immediate feedback for name availability
+- **Error Messaging** - Clear feedback for validation failures
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Used by**: Web alias creation and management interfaces
+- **Critical for**: Web alias system and namespace management
+
+---
+
+### **File 387955: core/scripts/prime/wtw_utilities.js** (Core Utilities)
+**Purpose**: Comprehensive utility functions for common operations across browse and admin modes
+
+**Functions**:
+
+1. **`dGet(zelementname)`** - Global DOM element retrieval
+   - Simplifies document.getElementById calls outside WTW class
+   - **Used by**: All JavaScript code for DOM manipulation
+
+2. **`WTW.dGet(zelementname)`** - WTW class DOM element retrieval
+   - Same functionality within WTW class context
+   - **Used by**: WTW methods for DOM access
+
+3. **`log(ztext, zcolor)`** - Enhanced logging system
+   - Console logging with color support and dev mode respect
+   - **Used by**: Debugging and development across entire platform
+
+4. **`setWindowSize()`** - Responsive window management
+   - Cross-browser window size detection and element resizing
+   - Handles admin menu sizing and 3D canvas resizing
+   - **Called by**: Window resize events and initialization
+
+5. **`checkFocus()`** - Global focus management
+   - Manages document focus events and admin interface interactions
+   - Handles color selector closing and canvas focus
+   - **Called by**: Focus event handlers
+
+6. **`getScrollY()`** - Cross-browser scroll position
+   - Returns vertical scroll position with browser compatibility
+   - **Used by**: Scroll-dependent interface elements
+
+7. **`getMoldnameParts(zmoldname)`** - Mold name parsing
+   - Extracts server ID, mold indices, IDs, and hierarchy information from mold names
+   - **Used by**: 3D object identification and relationship management
+
+**Utility Categories**:
+- **DOM Manipulation** - Element access and manipulation utilities
+- **Logging & Debug** - Development and debugging support
+- **Window Management** - Responsive design and resizing
+- **Focus Management** - User interface focus and interaction
+- **Data Parsing** - Complex string parsing for 3D object identification
+- **Cross-browser Support** - Compatibility across different browsers
+
+**Cross-references**:
+- **Used by**: Every JavaScript file in the platform
+- **Critical for**: Basic JavaScript operations and cross-browser compatibility
+- **Integrates with**: All user interface and 3D object systems
+
+---
+
+### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
+**Purpose**: HUD interface functions for camera management and 3D viewing controls
+
+**Functions**:
+
+1. **`hudGetCameras()`** - Camera HUD interface creation
+   - Creates camera control interface with labels and buttons
+   - Sets up camera type buttons (Follow, First Person, VR)
+   - Includes camera style options (Picture, Anaglyph, VR, VR Gamepad)
+   - Adds camera distance slider with range controls
+   - **Called by**: HUD system when camera settings are opened
+
+2. **`hudHighlightCamera(zcameraset, zactivebutton)`** - Camera button highlighting
+   - Manages visual feedback for selected camera options
+   - Changes button colors (blue for selected, black for default)
+   - Handles different camera sets (style, main camera, second camera)
+   - **Used by**: Camera selection interface for visual feedback
+
+3. **`hudChangeCameraDistance(zmoldname)`** - Camera distance control
+   - Handles camera distance slider interactions
+   - Processes mouse drag events for distance adjustment
+   - Saves camera distance to cookies for persistence
+   - **Called by**: HUD slider interaction system
+
+4. **`hudClearCameras()`** - Camera interface cleanup
+   - Removes camera control elements from DOM
+   - Cleans up slider elements and input fields
+   - **Called by**: HUD cleanup when switching interfaces
+
+**Camera Types Supported**:
+- **Follow Camera** - Third-person following camera
+- **First Person Stable** - Stable first-person view
+- **First Person** - Standard first-person view
+- **VR Camera** - Virtual reality camera mode
+- **VR Gamepad** - VR with gamepad controls
+- **Anaglyph** - 3D stereoscopic viewing
+
+**Cross-references**:
+- **Uses**: HUD system **File 362059** for interface creation
+- **Integrates with**: Camera system **File 375100** for camera switching
+- **Used by**: User interface for camera control and 3D viewing options
+- **Critical for**: 3D navigation and viewing experience customization
+
+---
+
+### **File 273297: core/scripts/admin/wtw_adminbuildings.js** (Admin Building Management)
+**Purpose**: Administrative interface functions for 3D building management and configuration
+
+**Functions**:
+
+1. **`openBuildingForm(w)`** - Building form initialization
+   - Opens building information form with data loading
+   - Resets form fields and shows loading indicator
+   - Loads building data via AJAX and populates form fields
+   - **Called by**: Admin interface for building editing
+
+2. **`loadBuildingForm(w)`** - Building form data loading
+   - Loads existing building settings into form fields
+   - Handles building metadata, versioning, and description
+   - Updates interface labels and navigation elements
+   - **Called by**: Building form initialization
+
+**Key Features**:
+- **Async Data Loading** - AJAX-based building data retrieval
+- **Form Management** - Complete form field population and validation
+- **Version Control** - Building version management and tracking
+- **Interface Updates** - Dynamic label and navigation updates
+- **Loading States** - User feedback during data loading operations
+
+**Building Form Elements**:
+- **Basic Info** - Building name, description, alt tags
+- **Version Control** - Version ID, version number, version description
+- **Analytics** - Analytics ID for tracking
+- **Snapshot** - Preview image management
+- **Navigation** - Dynamic breadcrumb and title updates
+
+**Cross-references**:
+- **Uses**: Connect buildings API **File 14** for data retrieval
+- **Integrates with**: Admin interface system for form management
+- **Used by**: Building administration and content management
+- **Critical for**: 3D building creation, editing, and management
+
 ---
 
 ## 🌍 VITAL PLUGINS ANALYSIS
