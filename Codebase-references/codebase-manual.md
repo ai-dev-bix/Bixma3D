@@ -424,6 +424,139 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+## 📜 CORE JAVASCRIPT MODULES ANALYSIS (CONTINUED)
+
+### **File 265765: core/scripts/actionzones/wtw_actionzonefunctions.js** (Action Zone Logic)
+**Purpose**: Core action zone processing system that handles avatar interactions with trigger zones
+
+**Functions**:
+
+1. **`checkActionZones()`** - Main action zone processing loop
+   - Iterates through all action zones to check avatar intersections
+   - Handles multiple zone types: loadzone, teleportzone, door, mirror, ridealong
+   - Manages zone status transitions (0=unloaded, 2=loaded, 3=opening, 4=open)
+   - Triggers plugin hooks for custom zone behaviors
+   - **Called by**: Main render loop for continuous zone monitoring
+
+**Zone Type Processing**:
+- **Load Zones** - Triggers 3D content loading/unloading based on avatar proximity
+- **Teleport Zones** - Handles avatar teleportation between locations
+- **Door Zones** - Manages door opening/closing animations
+- **Mirror Zones** - Handles reflection object loading
+- **Ride Along Zones** - Manages avatar parenting for moving platforms
+- **Click Open Zones** - Interactive zones requiring user click
+
+**Key Features**:
+- **Performance Optimization** - "Extreme" zones for level-of-detail loading
+- **Admin Mode Support** - `loadAllActionZones` for complete scene loading
+- **Plugin Integration** - Extensive hooks for custom zone behaviors
+- **Activity Monitoring** - Avatar movement tracking for inactivity timer
+- **Multi-avatar Support** - Checks both current user and other avatars
+
+**Cross-references**:
+- **Uses**: Plugin system for zone behavior extensions
+- **Calls**: Analytics tracking, script loading, animation systems
+- **Critical for**: Dynamic 3D content loading and interactive environments
+
+---
+
+### **File 267294: core/scripts/actionzones/wtw_basicactionzones.js** (Action Zone Creation)
+**Purpose**: Factory functions for creating different types of action zones in 3D scenes
+
+**Functions**:
+
+1. **`addActionzoneLoadzone(zactionzonename, zactionzoneind, zactionzonedef)`** - Load zone creation
+   - Creates invisible trigger zones for content loading
+   - Handles position, scaling, rotation from zone definition
+   - Sets transparent properties (opacity 0) for invisible triggers
+   - **Used by**: Scene loading system for performance optimization
+
+2. **`addActionzoneUnloadzone(zactionzonename, zactionzoneind, zactionzonedef)`** - Unload zone creation
+   - Creates zones that trigger content unloading
+   - Same structure as load zones but opposite functionality
+   - **Used by**: Performance optimization for large scenes
+
+3. **`addActionzoneTeleportZone(zactionzonename, zactionzoneind, zactionzonedef)`** - Teleport zone creation
+   - Creates zones that trigger avatar teleportation
+   - Handles spatial positioning for teleport triggers
+   - **Used by**: Navigation system between 3D locations
+
+**Zone Properties**:
+- **Shape Support** - Box, sphere, and custom shapes
+- **Spatial Control** - Full 3D positioning, scaling, rotation
+- **Visibility** - Transparent zones (opacity 0) for invisible triggers
+- **Collision Settings** - Non-collision zones for avatar pass-through
+- **Parent Relationships** - Zones attached to 3D objects or scenes
+
+**Cross-references**:
+- **Uses**: Mold system **File 372127** for zone geometry creation
+- **Integrates with**: Action zone functions **File 265765** for behavior
+- **Critical for**: Interactive 3D environments and performance optimization
+
+---
+
+### **File 291472: core/scripts/avatars/wtw_addavatarlist.js** (Avatar Management)
+**Purpose**: Avatar type management and autobot avatar creation system
+
+**Functions**:
+
+1. **`getAvatarList()`** - Available avatar types
+   - Returns array of available avatar types
+   - Currently supports: Anonymous, Female, Male
+   - **Used by**: Avatar selection interfaces
+
+2. **`addAvatar(zavatarname, zavatardef, zparentname)`** - Avatar factory function
+   - Routes avatar creation based on avatar type
+   - Handles special avatar types (shark) and default 3D objects
+   - Sets parent relationships for avatar positioning
+   - **Used by**: Avatar creation and autobot systems
+
+**Avatar Types**:
+- **Anonymous** - Default avatar type
+- **Female/Male** - Gender-specific avatars
+- **Shark** - Special animated avatar type
+- **3D Object** - Default fallback for custom avatars
+
+**Cross-references**:
+- **Used by**: Avatar system for type-based creation
+- **Integrates with**: 3D object system for avatar geometry
+- **Future Enhancement** - Autobot avatar system (currently not in use)
+
+---
+
+### **File 291522: core/scripts/avatars/wtw_avatarfunctions.js** (Avatar Animation & Movement)
+**Purpose**: Comprehensive avatar movement and animation control system
+
+**Functions**:
+
+1. **`moveAvatar(zavatar, zkeyspressed)`** - Main avatar movement processor
+   - Processes keyboard, mouse, and touch input for avatar movement
+   - Handles complex animation state management
+   - Manages animation transitions between movement types
+   - **Called by**: Input system for real-time avatar control
+
+**Animation States Managed**:
+- **onjump** - Jump animations
+- **onwalk** - Walking animations  
+- **onwalkbackwards** - Backward walking
+- **onrun** - Running animations
+- **onrunbackwards** - Backward running
+- **onjumpwalk** - Combined jump and walk
+
+**Key Features**:
+- **Multi-input Support** - Keyboard, mouse, touch input processing
+- **Animation Blending** - Smooth transitions between animation states
+- **State Management** - Tracks active animations and transitions
+- **Performance Optimization** - Efficient animation state checking
+- **Camera Integration** - Movement synchronized with camera focus
+
+**Cross-references**:
+- **Uses**: Animation system for avatar state management
+- **Integrates with**: Input system **File 381998** for user control
+- **Critical for**: Avatar movement and animation in 3D environments
+
+---
+
 ### **File 223690: core/functions/class_wtwadmin.php** (Admin Interface)
 **Purpose**: Admin-specific functionality and interface management for 3D CMS administration
 
@@ -1083,6 +1216,123 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 - **Uses**: Handlers class **File 246040** for settings and validation
 - **Integrates with**: Content folder system for organization
 - **Critical for**: 3D asset management and file storage
+
+---
+
+### **File 269811: core/scripts/admin/wtw_adminactionzones.js** (Admin Action Zone Management)
+**Purpose**: Administrative interface functions for managing action zones in edit mode
+
+**Functions**:
+
+1. **`getLoadActionZoneID(zactionzonenamepart)`** - Load zone lookup
+   - Searches for load action zones by name pattern
+   - Filters by connecting grid and excludes custom zones
+   - **Used by**: Admin interface for zone selection
+
+2. **`showActionZone(zactionzoneind)`** - Zone visualization in edit mode
+   - Makes action zones visible with opacity and edge rendering
+   - Different visualization for different zone types (loadzone, doors, vehicles)
+   - Handles complex zone types with axle and pole components
+   - **Used by**: Admin interface for zone editing and alignment
+
+3. **`hideActionZone(zactionzoneind)`** - Zone hiding in edit mode
+   - Returns zones to transparent state (opacity 0)
+   - Disables edge rendering and resets visibility
+   - **Used by**: Admin interface for clean scene view
+
+**Zone Type Visualization**:
+- **Load Zones** - Semi-transparent with blue edges
+- **Vehicle Zones** - Shows axle poles and movement components
+- **Door Zones** - Displays door mechanism visualization
+- **Default Zones** - Low opacity transparent overlay
+
+**Cross-references**:
+- **Uses**: Action zone system **File 265765** for zone data
+- **Integrates with**: Admin interface for zone management
+- **Critical for**: Visual zone editing and scene composition
+
+---
+
+### **File 227818: core/functions/class_wtwanimations.php** (Animation Management)
+**Purpose**: Database operations for 3D object animations and animation assignment system
+
+**Functions**:
+
+1. **`instance()`** - Animations singleton pattern
+   - **Used by**: All animation management operations
+
+2. **`getUploadedFileAnimationsDetails($zuploadobjectid)`** - Animation retrieval
+   - Gets all animations associated with uploaded 3D objects
+   - Includes sound file paths for animation audio
+   - Filters by user permissions and stock animations
+   - **Returns**: Array of animation details with sound integration
+   - **Used by**: 3D model animation assignment interface
+
+3. **`getObjectAnimation($zobjectanimationid)`** - Single animation details
+   - Retrieves specific animation with sound information
+   - Includes sound file path and filename
+   - **Used by**: Animation editing and configuration
+
+4. **`saveObjectAnimation(...)`** - Animation persistence (14+ parameters)
+   - Saves animation assignments to 3D objects
+   - Handles frame ranges, loop settings, speed ratios
+   - Includes sound integration and distance settings
+   - **Parameters**: Animation timing, sound, scripting, and behavior settings
+   - **Used by**: Animation creation and editing interface
+
+**Key Features**:
+- **3D Object Integration** - Animations assigned to any 3D object/mold
+- **Sound Synchronization** - Animation-synchronized audio with distance settings
+- **Event Triggers** - Animation triggers based on mold events
+- **Script Integration** - JavaScript execution at animation end
+- **Performance Control** - Speed ratios and loop settings
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for animation storage
+- **Uses**: Upload system **File 257332** for sound file integration
+- **Integrates with**: 3D object system for animation assignment
+- **Critical for**: 3D content animation and interactive behaviors
+
+---
+
+### **File 228069: core/functions/class_wtwapi.php** (API Key Management)
+**Purpose**: API key management system for external application integration
+
+**Functions**:
+
+1. **`instance()`** - API management singleton pattern
+   - **Used by**: All API key operations
+
+2. **`getAPIKeys($zdeleted)`** - API key listing
+   - Returns array of API keys with admin permission check
+   - Supports active and deleted key retrieval
+   - **Security**: Requires admin permissions
+   - **Used by**: Admin interface for API key management
+
+3. **`getAPIKeysArray($zdeleted)`** - API key data processing
+   - Formats API key data for display
+   - Masks sensitive key information (shows only last 7 characters)
+   - Includes app information and approval status
+   - **Used by**: API key listing and management interfaces
+
+4. **`getAPIKey($zapikeyid)`** - Single API key retrieval
+   - Gets specific API key details with admin validation
+   - Decodes base64 encoded API key IDs
+   - **Security**: Admin permission validation
+   - **Used by**: API key editing and configuration
+
+**Key Features**:
+- **Security-First Design** - Admin-only access with permission validation
+- **Key Masking** - Sensitive key data protection in display
+- **App Integration** - Links API keys to external applications
+- **Approval Workflow** - API key approval and management system
+- **Audit Trail** - Complete create/update/delete tracking
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for API key storage
+- **Uses**: Handlers class **File 246040** for permission validation
+- **Integrates with**: External application authentication
+- **Critical for**: Secure API access and external integrations
 
 ---
 
