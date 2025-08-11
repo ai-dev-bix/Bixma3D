@@ -3325,6 +3325,125 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 32855: content/plugins/wtw-3dinternet/scripts/move.js** (Avatar Movement Synchronization)
+**Purpose**: Real-time avatar movement synchronization and visibility management for multiplayer environments
+
+**Functions**:
+
+1. **`moveAvatar(zavatar, zmoveevents)`** - Avatar movement synchronization
+   - Synchronizes avatar movement across multiplayer sessions
+   - Sends movement data to multiplayer socket
+   - Handles avatar cleanup when users leave
+   - **Called by**: Avatar movement system for multiplayer synchronization
+
+2. **`getAvatarInd(zinstanceid)`** - Avatar index management
+   - Finds avatar index in multiplayer avatars array
+   - **Used by**: Avatar management for array operations
+
+3. **`addParticipantsMessage(zdata)`** - Participant counter
+   - Updates display of current multiplayer participants
+   - Shows "X Walkers" message based on user count
+   - **Called by**: Multiplayer system for participant tracking
+
+4. **`removeAvatar(zavatarname)`** - Avatar removal with fade effect
+   - Removes avatars from 3D scene with smooth fade animation
+   - Properly disposes avatar resources and cleans up arrays
+   - **Called by**: Multiplayer system when users leave
+
+5. **`showAvatar(zavatarname, zsend)`** - Avatar visibility management
+   - Shows avatars with fade-in animation
+   - Handles blocking/banning with visibility reduction
+   - Manages mobile visibility optimization
+   - **Called by**: Multiplayer system for avatar display
+
+**Avatar Synchronization Features**:
+- **Real-time Movement** - Live avatar position and rotation synchronization
+- **Fade Animations** - Smooth fade in/out for avatar appearance/disappearance
+- **Visibility Management** - Blocking/banning integration with reduced visibility
+- **Mobile Optimization** - Reduced visibility for mobile devices
+- **Resource Management** - Proper disposal and cleanup of avatar resources
+
+**Multiplayer Avatar Management**:
+- **Array Management** - Dynamic avatar array with proper indexing
+- **Socket Communication** - Real-time movement data transmission
+- **Participant Tracking** - Live participant count display
+- **Blocking/Banning Integration** - User safety with visibility controls
+- **Performance Optimization** - Efficient avatar rendering and updates
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Socket.io for real-time movement synchronization
+- **Integrates with**: Avatar system **File 291522** for movement control
+- **Critical for**: Multiplayer avatar synchronization and social interaction
+
+---
+
+### **File 34755: content/plugins/wtw-3dinternet/scripts/versions.js** (Version Management System)
+**Purpose**: Version control and update management for 3D web content with automatic update checking
+
+**Functions**:
+
+1. **`showListVersionCheck(zwebtype, zversioncheck)`** - Version checking interface
+   - Displays version checking interface for 3D web content
+   - Handles version comparison and update availability
+   - **Called by**: Content management for version control
+
+2. **`downloadWebVersion(zobj, zwebid, zupdatewebid, zversionid, zversion, zoldversion, zwebtype)`** - Version update system
+   - Downloads and applies version updates for 3D web content
+   - Provides visual feedback during update process
+   - Updates interface with completion status and version numbers
+   - **Called by**: Version management for content updates
+
+**Version Control Features**:
+- **Version Checking** - Automatic version comparison and update detection
+- **Update Interface** - Visual update interface with progress feedback
+- **Version Display** - Current and available version information
+- **Update Completion** - Visual confirmation of successful updates
+- **Badge Management** - Update badges for pending updates
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Download handlers for version updates
+- **Critical for**: Content version management and automatic updates
+
+---
+
+### **File 34900: content/plugins/wtw-3dinternet/scripts/voicechat.js** (Voice Chat System)
+**Purpose**: Real-time voice communication system for multiplayer environments with WebRTC integration
+
+**Functions**:
+
+1. **`initVoiceChatSocket()`** - Voice chat socket initialization
+   - Establishes Socket.io connection for voice communication
+   - Sets up voice data receiving and talking status management
+   - **Called by**: Multiplayer system for voice chat functionality
+
+2. **Voice Communication Handlers** - Real-time voice processing
+   - **Audio Receiving** - Processes incoming voice data with blocking/banning checks
+   - **Talking Status** - Updates avatar talking indicators
+   - **Stream Management** - Handles voice stream creation and playback
+
+**Voice Chat Features**:
+- **Real-time Voice** - Live voice communication with WebRTC
+- **Avatar Integration** - Talking status indicators on avatars
+- **Blocking/Banning** - User safety integration with voice chat
+- **Stream Processing** - Audio stream management and playback
+- **Recording Support** - Voice recording capabilities (work in progress)
+
+**Advanced Features (Work in Progress)**:
+- **Stream Recording** - Voice stream recording with FFmpeg
+- **Video Streaming** - Video stream integration
+- **Speech Recognition** - Voice-to-text conversion
+- **Media Streaming** - Advanced media streaming capabilities
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: WebRTC for real-time voice communication
+- **Integrates with**: Avatar system for talking indicators
+- **Critical for**: Multiplayer voice communication and social interaction
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
