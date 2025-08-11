@@ -3132,6 +3132,101 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 27955: content/plugins/wtw-3dinternet/scripts/chat.js** (Advanced Chat Text System)
+**Purpose**: Advanced 3D text input system for group chat with real-time text rendering
+
+**Functions**:
+
+1. **`toggleChatPrompt()`** - 3D chat prompt management
+   - Creates and manages 3D text prompt for group chat
+   - Handles prompt opening, closing, and text submission
+   - **Called by**: Group chat system for text input
+
+2. **`promptText()`** - 3D text prompt initialization
+   - Creates hidden HTML input field for 3D text editing
+   - Sets up text editing environment for 3D chat
+   - **Called by**: Chat prompt system for text input setup
+
+3. **`promptEditText(zmoldname)`** - 3D text editing activation
+   - Activates 3D text editing with visual highlighting
+   - Manages typing timer for cursor blinking effect
+   - **Called by**: 3D text interaction system
+
+4. **`promptEditRefreshText(zmoldname, zparentname, zeditdone)`** - Real-time 3D text rendering
+   - Renders text in real-time as user types in 3D space
+   - Handles text length limits and character width optimization
+   - Creates 3D text with MeshWriter and custom styling
+   - **Called by**: Text editing system for real-time 3D text updates
+
+**3D Text Features**:
+- **Real-time Rendering** - Live 3D text updates as user types
+- **Cursor Simulation** - Blinking cursor effect with '|' character
+- **Text Length Management** - Automatic text trimming for display optimization
+- **Character Width Optimization** - Adjusts max length based on wide characters (W, M)
+- **3D Text Styling** - Complete material and color control for 3D text
+
+**3D Text Styling Properties**:
+- **Font Control** - Arial font with custom letter height and thickness
+- **Color System** - Diffuse, specular, ambient, and emissive color control
+- **Material Properties** - Alpha transparency and anchor positioning
+- **3D Properties** - Letter thickness for true 3D text appearance
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Babylon.js MeshWriter for 3D text rendering
+- **Integrates with**: 3D form system **File 369743** for text input
+- **Critical for**: Immersive 3D text communication and group chat
+
+---
+
+### **File 28400: content/plugins/wtw-3dinternet/scripts/class_main.js** (3D Internet Dashboard)
+**Purpose**: Dashboard and content discovery system for 3D Internet plugin with cross-server content browsing
+
+**Functions**:
+
+1. **`openFullPageForm(zpageid, zsetcategory, zitem, zitemname, zitemnamepath, zpreviewname)`** - 3D Internet form routing
+   - Handles 3D Internet specific full-page forms
+   - Manages content discovery interface with search capabilities
+   - Supports communities, buildings, things, avatars, and plugins discovery
+   - **Called by**: Plugin system for 3D Internet interface management
+
+2. **`openFullPageFormMediaLibrary(...)`** - Media library integration
+   - Integrates 3D Internet downloads with media library
+   - Shows download menu when user has download permissions
+   - **Called by**: Media library for 3D Internet content integration
+
+3. **`openDashboardForm(zshow)`** - Dashboard content loading
+   - Loads WalkTheWeb video content and community activities
+   - Fetches latest videos with YouTube integration
+   - Displays community activities, shared content, and server information
+   - **Called by**: Dashboard system for content discovery
+
+4. **`openDashboardFormDownloads(zdownloads, zshow)`** - Download dashboard management
+   - Processes download information for dashboard display
+   - **Called by**: Dashboard system for download management
+
+**Content Discovery Features**:
+- **Multi-type Search** - Communities, buildings, things, avatars, plugins
+- **Video Integration** - YouTube video embedding with iframe support
+- **Activity Feed** - Community activities and shared content display
+- **Server Discovery** - Server listing with geographic information
+- **Content Sharing** - Shared 3D web and avatar discovery
+
+**Dashboard Content Types**:
+- **Video Content** - Latest WalkTheWeb videos with presenter information
+- **Community Activities** - Recent community activities and content sharing
+- **Shared 3D Webs** - Cross-server 3D content discovery
+- **Shared Avatars** - Avatar sharing and discovery system
+- **Server Network** - WalkTheWeb server network with geographic data
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Integrates with**: Dashboard system for content discovery
+- **Uses**: External APIs for video and activity content
+- **Critical for**: Content discovery and cross-server 3D web browsing
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
