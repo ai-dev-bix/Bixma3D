@@ -3444,6 +3444,58 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+## **SECONDARY PLUGINS** (Brief Analysis)
+
+### **File 44682: content/plugins/wtw-shopping/wtw-shopping.php** (Shopping Plugin)
+**Purpose**: E-commerce integration plugin for 3D shopping experiences
+
+**Brief Overview**: 
+- **Plugin Type**: WalkTheWeb 3D Shopping Expansion (v1.0.3)
+- **Functionality**: Enables 3D shopping websites with interactive commerce
+- **3D Assets**: Shopping buttons (Add to Cart, Buy Now, Checkout, View Cart, Read More)
+- **Product Displays**: Multiple product display types (1-side, 2-side, base, no display)
+- **Integration**: Extends WalkTheWeb for e-commerce functionality
+
+**Key Components**:
+- **Shopping Buttons**: 3D interactive buttons for commerce actions
+- **Product Displays**: 3D product showcase systems
+- **Class System**: `class_wtwshopping.php` for shopping functionality
+
+---
+
+### **File 42019: content/plugins/wtw-coins/wtw-coins.php** (Coins Plugin)
+**Purpose**: In-game token system for virtual currency and collectibles
+
+**Brief Overview**:
+- **Plugin Type**: WalkTheWeb Coin Tokens (v1.0.3)
+- **Functionality**: In-game collectible tokens for upgrades and enhancements
+- **Currency Type**: Virtual in-game currency (not real money)
+- **3D Assets**: Platform systems for coin collection and display
+- **Platform Types**: Single, double, triple, quad platforms with ramps and lifts
+
+**Key Components**:
+- **Platform Systems**: 3D platforms for coin placement and collection
+- **Token Management**: Virtual currency system for in-game purchases
+- **Class System**: `class_plugin.php` for coin functionality
+
+---
+
+### **File 50616: content/plugins/wtw-swiftmailer/wtw-swiftmailer.php** (Email Plugin)
+**Purpose**: Email server integration with SMTP configuration
+
+**Brief Overview**:
+- **Plugin Type**: WalkTheWeb Swift Mailer 3D Plugin (v1.0.1)
+- **Functionality**: Adds email server with SMTP configuration
+- **Integration**: Email functionality for 3D platform communications
+- **Template System**: Plugin template structure for email services
+
+**Key Components**:
+- **SMTP Integration**: Email server configuration and management
+- **Connect API**: Sample connect endpoint for email functionality
+- **Class System**: `class_functions.php` for email functionality
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
