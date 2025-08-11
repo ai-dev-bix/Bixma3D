@@ -582,95 +582,8 @@ WTWJS.prototype.completeMold = function(zmold, zmoldname, zparentname, zmolddef,
 
 WTWJS.prototype.addMoldPhysics = function(zmold, zmolddef, zshape) {
 	try {
-		var zparameters = {};
-		zparameters.mass = 0;
-		if (zmolddef.physics.mass != undefined) {
-			if (WTW.isNumeric(zmolddef.physics.mass)) {
-				if (Number(zmolddef.physics.mass) != 0) {
-					zparameters.mass = zmolddef.physics.mass;
-				}
-			}
-		}
-		if (zmolddef.physics.istriggershape != undefined) {
-			if (WTW.isNumeric(zmolddef.physics.istriggershape)) {
-				if (Number(zmolddef.physics.istriggershape) == 1) {
-					zparameters.isTriggerShape = true;
-				}
-			}
-		}
-		if (zmolddef.physics.startasleep != undefined) {
-			if (WTW.isNumeric(zmolddef.physics.startasleep)) {
-				if (Number(zmolddef.physics.startasleep) == 1) {
-					zparameters.startAsleep = true;
-				}
-			}
-		}
-		if (zmolddef.physics.center != undefined) {
-			if (zmolddef.physics.center.x != undefined && zmolddef.physics.center.y != undefined && zmolddef.physics.center.z != undefined) {
-				if (WTW.isNumeric(zmolddef.physics.center.x) && WTW.isNumeric(zmolddef.physics.center.y) && WTW.isNumeric(zmolddef.physics.center.z)) {
-					if (Number(zmolddef.physics.center.x) != 0 || Number(zmolddef.physics.center.y) != 0 || Number(zmolddef.physics.center.z) != 0) {
-						zparameters.center = new BABYLON.Vector3(zmolddef.physics.center.x,zmolddef.physics.center.y,zmolddef.physics.center.z);
-					}
-				}
-			}
-		}
-		if (zmolddef.physics.extents != undefined) {
-			if (zmolddef.physics.extents.x != undefined && zmolddef.physics.extents.y != undefined && zmolddef.physics.extents.z != undefined) {
-				if (WTW.isNumeric(zmolddef.physics.extents.x) && WTW.isNumeric(zmolddef.physics.extents.y) && WTW.isNumeric(zmolddef.physics.extents.z)) {
-					if (Number(zmolddef.physics.extents.x) != 0 || Number(zmolddef.physics.extents.y) != 0 || Number(zmolddef.physics.extents.z) != 0) {
-						zparameters.extents = new BABYLON.Vector3(zmolddef.physics.extents.x,zmolddef.physics.extents.y,zmolddef.physics.extents.z);
-					}
-				}
-			}
-		}
-		if (zmolddef.physics.friction != undefined) {
-			if (WTW.isNumeric(zmolddef.physics.friction)) {
-				if (Number(zmolddef.physics.friction) != 0) {
-					zparameters.friction = zmolddef.physics.friction;
-				}
-			}
-		}
-		if (zmolddef.physics.pointa != undefined) {
-			if (zmolddef.physics.pointa.x != undefined && zmolddef.physics.pointa.y != undefined && zmolddef.physics.pointa.z != undefined) {
-				if (WTW.isNumeric(zmolddef.physics.pointa.x) && WTW.isNumeric(zmolddef.physics.pointa.y) && WTW.isNumeric(zmolddef.physics.pointa.z)) {
-					if (Number(zmolddef.physics.pointa.x) != 0 || Number(zmolddef.physics.pointa.y) != 0 || Number(zmolddef.physics.pointa.z) != 0) {
-						zparameters.pointa = new BABYLON.Vector3(zmolddef.physics.pointa.x,zmolddef.physics.pointa.y,zmolddef.physics.pointa.z);
-					}
-				}
-			}
-		}
-		if (zmolddef.physics.pointb != undefined) {
-			if (zmolddef.physics.pointb.x != undefined && zmolddef.physics.pointb.y != undefined && zmolddef.physics.pointb.z != undefined) {
-				if (WTW.isNumeric(zmolddef.physics.pointb.x) && WTW.isNumeric(zmolddef.physics.pointb.y) && WTW.isNumeric(zmolddef.physics.pointb.z)) {
-					if (Number(zmolddef.physics.pointb.x) != 0 || Number(zmolddef.physics.pointb.y) != 0 || Number(zmolddef.physics.pointb.z) != 0) {
-						zparameters.pointb = new BABYLON.Vector3(zmolddef.physics.pointb.x,zmolddef.physics.pointb.y,zmolddef.physics.pointb.z);
-					}
-				}
-			}
-		}
-		if (zmolddef.physics.radius != undefined) {
-			if (WTW.isNumeric(zmolddef.physics.radius)) {
-				if (Number(zmolddef.physics.radius) != 0) {
-					zparameters.radius = zmolddef.physics.radius;
-				}
-			}
-		}
-		if (zmolddef.physics.restitution != undefined) {
-			if (WTW.isNumeric(zmolddef.physics.restitution)) {
-				if (Number(zmolddef.physics.restitution) != 0) {
-					zparameters.restitution = zmolddef.physics.restitution;
-				}
-			}
-		}
-		if (zmolddef.physics.rotation != undefined) {
-			if (zmolddef.physics.rotation.x != undefined && zmolddef.physics.rotation.y != undefined && zmolddef.physics.rotation.z != undefined && zmolddef.physics.rotation.w != undefined) {
-				if (WTW.isNumeric(zmolddef.physics.rotation.x) && WTW.isNumeric(zmolddef.physics.rotation.y) && WTW.isNumeric(zmolddef.physics.rotation.z) && WTW.isNumeric(zmolddef.physics.rotation.w)) {
-					if (zmolddef.physics.rotation.x != 0 || zmolddef.physics.rotation.y != 0 || zmolddef.physics.rotation.z != 0 || zmolddef.physics.rotation.w != 0) {
-						zparameters.rotation = new BABYLON.Quaternion(zmolddef.physics.rotation.x,zmolddef.physics.rotation.y,zmolddef.physics.rotation.z,zmolddef.physics.rotation.w);
-					}
-				}
-			}
-		}
+		// Use centralized physics parameter builder
+		var zparameters = WTW.buildPhysicsParameters(zmolddef.physics);
 
 		var zshapetype = BABYLON.PhysicsShapeType.MESH;
 		switch (zshape) {
@@ -690,13 +603,28 @@ WTWJS.prototype.addMoldPhysics = function(zmold, zmolddef, zshape) {
 				break;
 			case 'babylonfile':
 				zshapetype = BABYLON.PhysicsShapeType.CONVEX_HULL;
-				for (var i = 0; i < scene.meshes.length;i++) {
-					if (scene.meshes[i] != null) {
-						if (scene.meshes[i].id.indexOf(zmold.id) > -1) {
-							try {
-								scene.meshes[i].aggregate = new BABYLON.PhysicsAggregate(scene.meshes[i], zshapetype, zparameters, scene);
-							} catch (ex) {}
+				// IMPROVED: Use getChildMeshes() for reliable mesh access instead of scene iteration
+				var zchildMeshes = zmold.getChildMeshes(true);
+				var zphysicsApplied = 0;
+				for (var i = 0; i < zchildMeshes.length; i++) {
+					if (zchildMeshes[i] != null && zchildMeshes[i].geometry) {
+						try {
+							zchildMeshes[i].aggregate = new BABYLON.PhysicsAggregate(zchildMeshes[i], zshapetype, zparameters, scene);
+							zphysicsApplied++;
+							WTW.log('Physics applied to uploaded mesh: ' + zchildMeshes[i].id);
+						} catch (ex) {
+							WTW.log('Physics application failed for mesh: ' + zchildMeshes[i].id + ' - ' + ex.message);
+							// Fallback to Babylon collision detection
+							zchildMeshes[i].checkCollisions = true;
+							WTW.log('Fallback collision detection enabled for: ' + zchildMeshes[i].id);
 						}
+					}
+				}
+				if (zphysicsApplied == 0) {
+					WTW.log('Warning: No physics applied to uploaded model ' + zmold.id + ' - enabling fallback collision detection');
+					// Enable collision detection on parent node as fallback
+					if (zmold.checkCollisions !== false) {
+						zmold.checkCollisions = true;
 					}
 				}
 				break;
@@ -1812,5 +1740,128 @@ WTWJS.prototype.setMoldFormFields = function(zshape) {
 	} catch (ex) {
 		WTW.log('core-scripts-molds-addmoldlist\r\n setMoldFormFields=' + ex.message);
 	}
+}
+
+WTWJS.prototype.buildPhysicsParameters = function(zphysicsdef) {
+	/* Helper function to build physics parameters for Havok physics engine */
+	/* Centralizes physics parameter construction for consistency across platform and uploaded models */
+	var zparameters = {};
+	
+	try {
+		// Set mass (default to 0 for static objects)
+		zparameters.mass = 0;
+		if (zphysicsdef.mass != undefined) {
+			if (WTW.isNumeric(zphysicsdef.mass)) {
+				if (Number(zphysicsdef.mass) != 0) {
+					zparameters.mass = Number(zphysicsdef.mass);
+				}
+			}
+		}
+		
+		// Set trigger shape flag
+		if (zphysicsdef.istriggershape != undefined) {
+			if (WTW.isNumeric(zphysicsdef.istriggershape)) {
+				if (Number(zphysicsdef.istriggershape) == 1) {
+					zparameters.isTriggerShape = true;
+				}
+			}
+		}
+		
+		// Set start asleep flag
+		if (zphysicsdef.startasleep != undefined) {
+			if (WTW.isNumeric(zphysicsdef.startasleep)) {
+				if (Number(zphysicsdef.startasleep) == 1) {
+					zparameters.startAsleep = true;
+				}
+			}
+		}
+		
+		// Set center offset
+		if (zphysicsdef.center != undefined) {
+			if (zphysicsdef.center.x != undefined && zphysicsdef.center.y != undefined && zphysicsdef.center.z != undefined) {
+				if (WTW.isNumeric(zphysicsdef.center.x) && WTW.isNumeric(zphysicsdef.center.y) && WTW.isNumeric(zphysicsdef.center.z)) {
+					if (Number(zphysicsdef.center.x) != 0 || Number(zphysicsdef.center.y) != 0 || Number(zphysicsdef.center.z) != 0) {
+						zparameters.center = new BABYLON.Vector3(zphysicsdef.center.x, zphysicsdef.center.y, zphysicsdef.center.z);
+					}
+				}
+			}
+		}
+		
+		// Set extents
+		if (zphysicsdef.extents != undefined) {
+			if (zphysicsdef.extents.x != undefined && zphysicsdef.extents.y != undefined && zphysicsdef.extents.z != undefined) {
+				if (WTW.isNumeric(zphysicsdef.extents.x) && WTW.isNumeric(zphysicsdef.extents.y) && WTW.isNumeric(zphysicsdef.extents.z)) {
+					if (Number(zphysicsdef.extents.x) != 0 || Number(zphysicsdef.extents.y) != 0 || Number(zphysicsdef.extents.z) != 0) {
+						zparameters.extents = new BABYLON.Vector3(zphysicsdef.extents.x, zphysicsdef.extents.y, zphysicsdef.extents.z);
+					}
+				}
+			}
+		}
+		
+		// Set friction
+		if (zphysicsdef.friction != undefined) {
+			if (WTW.isNumeric(zphysicsdef.friction)) {
+				if (Number(zphysicsdef.friction) != 0) {
+					zparameters.friction = Number(zphysicsdef.friction);
+				}
+			}
+		}
+		
+		// Set restitution (bounciness)
+		if (zphysicsdef.restitution != undefined) {
+			if (WTW.isNumeric(zphysicsdef.restitution)) {
+				if (Number(zphysicsdef.restitution) != 0) {
+					zparameters.restitution = Number(zphysicsdef.restitution);
+				}
+			}
+		}
+		
+		// Set point A for complex shapes
+		if (zphysicsdef.pointa != undefined) {
+			if (zphysicsdef.pointa.x != undefined && zphysicsdef.pointa.y != undefined && zphysicsdef.pointa.z != undefined) {
+				if (WTW.isNumeric(zphysicsdef.pointa.x) && WTW.isNumeric(zphysicsdef.pointa.y) && WTW.isNumeric(zphysicsdef.pointa.z)) {
+					if (Number(zphysicsdef.pointa.x) != 0 || Number(zphysicsdef.pointa.y) != 0 || Number(zphysicsdef.pointa.z) != 0) {
+						zparameters.pointa = new BABYLON.Vector3(zphysicsdef.pointa.x, zphysicsdef.pointa.y, zphysicsdef.pointa.z);
+					}
+				}
+			}
+		}
+		
+		// Set point B for complex shapes
+		if (zphysicsdef.pointb != undefined) {
+			if (zphysicsdef.pointb.x != undefined && zphysicsdef.pointb.y != undefined && zphysicsdef.pointb.z != undefined) {
+				if (WTW.isNumeric(zphysicsdef.pointb.x) && WTW.isNumeric(zphysicsdef.pointb.y) && WTW.isNumeric(zphysicsdef.pointb.z)) {
+					if (Number(zphysicsdef.pointb.x) != 0 || Number(zphysicsdef.pointb.y) != 0 || Number(zphysicsdef.pointb.z) != 0) {
+						zparameters.pointb = new BABYLON.Vector3(zphysicsdef.pointb.x, zphysicsdef.pointb.y, zphysicsdef.pointb.z);
+					}
+				}
+			}
+		}
+		
+		// Set radius for spherical shapes
+		if (zphysicsdef.radius != undefined) {
+			if (WTW.isNumeric(zphysicsdef.radius)) {
+				if (Number(zphysicsdef.radius) != 0) {
+					zparameters.radius = Number(zphysicsdef.radius);
+				}
+			}
+		}
+		
+		// Set rotation quaternion
+		if (zphysicsdef.rotation != undefined) {
+			if (zphysicsdef.rotation.x != undefined && zphysicsdef.rotation.y != undefined && zphysicsdef.rotation.z != undefined && zphysicsdef.rotation.w != undefined) {
+				if (WTW.isNumeric(zphysicsdef.rotation.x) && WTW.isNumeric(zphysicsdef.rotation.y) && WTW.isNumeric(zphysicsdef.rotation.z) && WTW.isNumeric(zphysicsdef.rotation.w)) {
+					if (zphysicsdef.rotation.x != 0 || zphysicsdef.rotation.y != 0 || zphysicsdef.rotation.z != 0 || zphysicsdef.rotation.w != 0) {
+						zparameters.rotation = new BABYLON.Quaternion(zphysicsdef.rotation.x, zphysicsdef.rotation.y, zphysicsdef.rotation.z, zphysicsdef.rotation.w);
+					}
+				}
+			}
+		}
+		
+	} catch (ex) {
+		WTW.log('core-scripts-molds-addmoldlist\r\n buildPhysicsParameters=' + ex.message);
+	}
+	
+	return zparameters;
 }
 

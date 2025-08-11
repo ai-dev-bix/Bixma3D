@@ -1699,9 +1699,16 @@ WTWJS.prototype.addMoldBabylonFile = function(zmoldname, zmolddef, zlenx, zleny,
 									if (WTW.adminView == 1 || zispickable) {
 										zresults.meshes[i].isPickable = true;
 									}
-									/* make sure child meshes check collisions if flag is true (we are not forcing false, just inheriting original settings) */
+									/* ENHANCED: Ensure collision detection is enabled for uploaded models */
 									if (zcheckcollisions) {
-										zresults.meshes[i].checkcollisions = true;
+										zresults.meshes[i].checkCollisions = true;
+									}
+									/* Additional safety: If no physics will be applied, ensure collision detection is enabled */
+									if (zmolddef.physics == undefined || zmolddef.physics.enabled != 1 || havokInstance == null) {
+										if (zcheckcollisions) {
+											zresults.meshes[i].checkCollisions = true;
+											WTW.log('Collision detection enabled for non-physics mesh: ' + zresults.meshes[i].id);
+										}
 									}
 									/* make sure all object meshes have a parent */
 									if (zresults.meshes[i].parent == null) {
@@ -1751,9 +1758,38 @@ WTWJS.prototype.addMoldBabylonFile = function(zmoldname, zmolddef, zlenx, zleny,
 									}
 								}
 							}
-							if (zmolddef.physics != undefined) {
-								if (zmolddef.physics.enabled == 1 && havokInstance != null) {
-									WTW.addMoldPhysics(znode, zmolddef, 'babylonfile');
+							// FIXED: Apply physics directly to loaded meshes (resolves async loading race condition)
+							if (zmolddef.physics != undefined && zmolddef.physics.enabled == 1 && havokInstance != null) {
+								// Build physics parameters using centralized helper
+								var zphysicsParams = WTW.buildPhysicsParameters(zmolddef.physics);
+								var zshapetype = BABYLON.PhysicsShapeType.CONVEX_HULL;
+								var zphysicsApplied = 0;
+								
+								// Apply physics directly to each loaded mesh
+								for (var j = 0; j < zresults.meshes.length; j++) {
+									if (zresults.meshes[j] != null && zresults.meshes[j].geometry) {
+										try {
+											zresults.meshes[j].aggregate = new BABYLON.PhysicsAggregate(
+												zresults.meshes[j], 
+												zshapetype, 
+												zphysicsParams, 
+												scene
+											);
+											zphysicsApplied++;
+											WTW.log('Physics applied to uploaded mesh: ' + zresults.meshes[j].id);
+										} catch (ex) {
+											WTW.log('Physics application failed for uploaded mesh: ' + zresults.meshes[j].id + ' - ' + ex.message);
+											// Fallback to Babylon collision detection
+											zresults.meshes[j].checkCollisions = true;
+											WTW.log('Fallback collision detection enabled for: ' + zresults.meshes[j].id);
+										}
+									}
+								}
+								
+								if (zphysicsApplied > 0) {
+									WTW.log('Successfully applied physics to ' + zphysicsApplied + ' meshes in uploaded model: ' + zmoldname);
+								} else {
+									WTW.log('Warning: No physics applied to uploaded model ' + zmoldname + ' - collision detection fallback enabled');
 								}
 							}
 							if (WTW.adminView == 1) {
