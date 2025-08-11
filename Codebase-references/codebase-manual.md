@@ -410,6 +410,228 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 231192: core/functions/class_wtwbuildings.php** (3D Buildings Management)
+**Purpose**: Core class for managing 3D building entities, including creation, copying, validation, and complex building operations
+
+**Functions**:
+
+1. **`instance()`** - Buildings singleton pattern
+   - **Used by**: All building-related operations
+
+2. **`getBuildingName($zbuildingid)`** - Building name retrieval
+   - Queries buildings table for building name by ID
+   - **Used by**: UI components displaying building information
+
+3. **`buildingExist($zbuildingid)`** - Building validation
+   - Verifies building existence in database
+   - **Used by**: Access control and validation functions
+
+4. **`saveBuilding($zbuildingid, $zpastbuildingid, ...)`** - Building persistence
+   - Creates new buildings or updates existing ones
+   - Handles building copying from templates/existing buildings
+   - Sets up admin access permissions for new buildings
+   - **Used by**: Admin interface for building management
+
+5. **`deleteBuilding($zbuildingid)`** - Building soft deletion
+   - Marks building as deleted with cascade to related entities
+   - Removes web aliases, building molds, and user authorizations
+   - **Used by**: Admin interface for building removal
+
+6. **`copyBuilding($zbuildingid, $zfrombuildingid)`** - Complex building duplication
+   - Copies all building components: action zones, connecting grids, content ratings
+   - Handles script associations and animation mappings
+   - Updates foreign key relationships for copied elements
+   - **Used by**: Function 4 (saveBuilding) and media library downloads
+
+7. **`clearBuilding($zbuildingid)`** - Building content cleanup
+   - Removes all molds, action zones, and associated content
+   - **Used by**: Function 5 (deleteBuilding) for cleanup
+
+**Cross-references**:
+- **Uses**: **File 236304** (wtwdb) for all database operations
+- **Manages**: Buildings table and all related entities
+- **Critical for**: 3D environment creation and management
+
+**Critical Notes**:
+- **Architecture**: Complex building lifecycle management with proper cascading
+- **Performance**: Heavy operations like copyBuilding need optimization
+- **Security Risk**: No input validation on building IDs - SQL injection vulnerable
+- **Enhancement**: Should implement building versioning and rollback
+- **Optimization**: Could cache building metadata for faster access
+
+---
+
+### **File 228442: core/functions/class_wtwavatars.php** (Avatar Management)
+**Purpose**: Comprehensive avatar system managing user avatars, animations, groups, and avatar lifecycle
+
+**Functions**:
+
+1. **`instance()`** - Avatars singleton pattern
+   - **Used by**: All avatar-related operations
+
+2. **`getAvatar($zuseravatarid, $zinstanceid)`** - Avatar retrieval and validation
+   - Complex logic for finding user avatars by user ID or instance ID
+   - Handles both logged-in users and anonymous instances
+   - **Used by**: All avatar functions for user avatar identification
+
+3. **`quickSaveAvatar($zavatarid, $zuseravatarid, $zinstanceid)`** - Avatar creation/copying
+   - Creates new user avatar from base avatar template
+   - Copies avatar files to user-specific folders
+   - Sets up default colors and animations for new user avatar
+   - **Used by**: Avatar selection and customization systems
+
+4. **`setUserAvatarGlobalHash($zuseravatarid)`** - Avatar sharing system
+   - Generates global hash for avatar sharing across platforms
+   - **Used by**: Avatar sharing and export functions
+
+5. **`saveAvatarDisplayName($zuseravatarid, $zinstanceid, $zavatardisplayname)`** - Display name management
+   - Handles avatar display name uniqueness and swapping
+   - **Status**: Deprecated in v3.3.0 with avatar designer plugin
+
+6. **`saveAvatarAnimation($zuseravataranimationid, ...)`** - Animation assignment
+   - Assigns animations to user avatars for different events
+   - **Status**: Deprecated in v3.3.0 with avatar designer plugin
+
+7. **`getAvatarAnimationsAll($zuseravatarid, $zinstanceid)`** - Animation retrieval
+   - Complex query for all available animations for user avatar
+   - **Status**: Deprecated in v3.3.0 with avatar designer plugin
+
+8. **`deleteAvatarAnimation($zuseravataranimationid, ...)`** - Animation removal
+   - **Status**: Deprecated in v3.3.0 with avatar designer plugin
+
+9. **`updateAvatarTransport($zuseravatarid, $zinstanceid, ...)`** - Avatar entrance/exit animations
+   - Sets avatar screen entrance and exit animations
+
+10. **`saveAvatarGroup($zavatargroupid, $zavatargroup)`** - Avatar grouping (Admin)
+    - Creates and manages avatar categories
+    - **Requires**: Admin permissions
+
+11. **`deleteAvatarGroup($zavatargroupid)`** - Avatar group removal (Admin)
+    - **Requires**: Admin permissions
+
+12. **`getAvatarGroups()`** - Avatar group listing (Admin)
+    - **Requires**: Admin permissions
+
+13. **`saveAvatarAnimationEvent($zanimationeventid, ...)`** - Animation event management (Admin)
+    - **Requires**: Admin permissions
+
+14. **`deleteAvatarAnimationEvent($zanimationeventid)`** - Animation event removal (Admin)
+    - **Requires**: Admin permissions
+
+15. **`getAvatarAnimationEvents()`** - Animation event listing (Admin)
+    - **Requires**: Admin permissions
+
+**Cross-references**:
+- **Uses**: **File 236304** (wtwdb) for database operations
+- **Manages**: User avatars, animations, groups, and customization
+- **Critical for**: User representation in 3D environments
+
+**Critical Notes**:
+- **Architecture**: Complex avatar lifecycle with proper user isolation
+- **Evolution**: Many functions deprecated in v3.3.0 - plugin system took over
+- **Security**: Good permission checking for admin functions
+- **Performance**: Heavy file operations in quickSaveAvatar need optimization
+- **Enhancement**: Modern avatar system likely in wtw-avatars plugin
+
+---
+
+### **File 248082: core/functions/class_wtwmoldscommon.php** (3D Template System)
+**Purpose**: Common functionality for managing 3D object templates (molds) across communities, buildings, and things
+
+**Functions**:
+
+1. **`instance()`** - Molds common singleton pattern
+   - **Used by**: All mold-related operations
+
+2. **`savePathPoints($zcommunityid, $zbuildingid, $zthingid, $zmoldid, $zpathnumber, $zpathpoints)`** - Path-based mold management
+   - Saves series of 3D points for complex molds like pipes
+   - Handles JSON point data with validation
+   - **Used by**: Complex 3D shape creation (pipes, paths, curves)
+
+3. **`saveWebImage($zthingmoldid, $zbuildingmoldid, $zcommunitymoldid, ...)`** - Image mold management
+   - Manages default, hover, and click images for molds
+   - Supports JavaScript function binding for interactivity
+   - **Used by**: Interactive image-based 3D objects
+
+4. **`importMolds($zwebtype, $zwebid, $zcopywebid, $zmoldsbulk)`** - Bulk mold import
+   - Imports multiple molds from media library or templates
+   - Handles complex foreign key updates after import
+   - Updates action zone and CSG mold relationships
+   - **Used by**: Media library downloads and template imports
+
+5. **`importMoldPoints($zwebtype, $zwebid, $zcopywebid, $zmoldpointsbulk)`** - Bulk point import
+   - Imports path points for complex molds
+   - **Used by**: Template imports with path-based objects
+
+**Cross-references**:
+- **Used by**: Building, community, and thing mold classes
+- **Manages**: Common mold functionality across all 3D content types
+- **Critical for**: 3D template system and content creation
+
+**Critical Notes**:
+- **Architecture**: Excellent abstraction for common mold operations
+- **Performance**: Bulk import operations are resource-intensive
+- **Security**: Access control validation before mold operations
+- **Enhancement**: Could implement mold caching and optimization
+- **Risk**: Complex foreign key updates could cause data inconsistency
+
+---
+
+### **File 249214: core/functions/class_wtwplugins.php** (Plugin System Core)
+**Purpose**: Core plugin management system providing common functionality and JavaScript hook generation for all plugins
+
+**Functions**:
+
+1. **`instance()`** - Plugins singleton pattern
+   - **Used by**: All plugin operations
+
+2. **`initClass()`** - Plugin context initialization
+   - Sets global variables from main wtw instance
+   - Provides plugin access to platform state
+   - **Called by**: Plugin initialization routines
+
+3. **`addScriptFunction($zevent, $zfunctionname)`** - Plugin hook registration
+   - Registers JavaScript functions for specific events
+   - Prevents duplicate registrations
+   - **Used by**: Plugins to register their JavaScript hooks
+
+4. **`getScriptFunctions()`** - JavaScript hook generation
+   - Generates complete JavaScript code for all plugin hooks
+   - Creates wrapper functions for 40+ plugin events
+   - Includes error handling for each plugin function
+   - **Called by**: **File 219961** Function 12 (loadJSBrowseData)
+
+5. **`getScriptFunction($zevent)`** - Individual hook retrieval
+   - Returns JavaScript code for specific event hooks
+   - **Used by**: Function 4 for building complete JavaScript
+
+6. **Plugin Hook Events** (Generated by Function 4):
+   - `loadusersettingsafterengine` - Post-engine user settings
+   - `renderloop` - Main render loop hooks
+   - `adminloadafterscreen` - Admin interface initialization
+   - `onmessage` - Message handling hooks
+   - `moveavatar` - Avatar movement hooks
+   - `enteravatar`/`avatarloadcomplete` - Avatar lifecycle hooks
+   - `addactionzone`/`enteractionzone`/`exitactionzone` - Action zone hooks
+   - `inputclick` - User interaction hooks
+   - `addmolds`/`openmoldform` - 3D content creation hooks
+   - `beforeunload` - Cleanup hooks
+   - And 25+ more specialized hooks
+
+**Cross-references**:
+- **Used by**: All plugins for JavaScript integration
+- **Critical for**: Plugin system architecture and extensibility
+- **Generates code for**: **File 377919** (wtw_constructor.js) plugin integration
+
+**Critical Notes**:
+- **Architecture**: Excellent plugin hook system with comprehensive event coverage
+- **Performance**: Generates large JavaScript code blocks - could optimize
+- **Security**: Plugin JavaScript runs with full platform access - needs sandboxing
+- **Enhancement**: Could implement plugin dependency management
+- **Risk**: Plugin errors could crash entire platform - needs better isolation
+
+---
+
 ### **File 377919: core/scripts/prime/wtw_constructor.js** (Main JavaScript Class)
 **Purpose**: Defines the main WTWJS JavaScript class with all global variables and initialization
 
