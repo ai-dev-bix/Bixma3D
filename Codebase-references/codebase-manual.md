@@ -2460,6 +2460,284 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 25155: content/plugins/wtw-3dinternet/functions/class_plugin.php** (3D Internet Plugin Core)
+**Purpose**: Main plugin class for 3D Internet multiplayer functionality with comprehensive hook system
+
+**Functions**:
+
+1. **`initAdminOnlyHooks()`** - Admin interface integration
+   - Registers admin-only full-page forms for multiplayer management
+   - Adds admin menu divisions for cross-server web management
+   - **Forms**: Logins, Multiplayer, Templates, Franchising
+   - **Called by**: Plugin initialization for admin features
+
+2. **`initHooks()`** - Complete plugin hook registration
+   - Registers 50+ JavaScript function hooks into core WTW system
+   - Adds stylesheets and scripts for multiplayer functionality
+   - Creates settings menu items and forms for user interface
+   - **Called by**: Plugin system for complete integration
+
+3. **`_3dInternetChatForm()`** - Chat interface form creation
+   - Creates HTML structure for chat and voice chat interfaces
+   - **Used by**: Chat system for user communication
+
+4. **`admin3dInternetLoginsForm()`** - Admin login management form
+   - Creates admin interface for managing 3D Internet logins
+   - **Used by**: Admin system for login configuration
+
+**Hook Categories**:
+- **Admin Interface** - Dashboard, forms, menu management
+- **User Authentication** - Login, logout, avatar selection
+- **Multiplayer** - Movement, chat, voice chat, avatar synchronization
+- **Content Management** - Connecting grids, action zones, molds
+- **Input Handling** - Click, hover, keyboard events
+- **Analytics** - Feedback submission and tracking
+
+**Key Features**:
+- **Comprehensive Integration** - 50+ hooks into core platform
+- **Multiplayer Core** - Complete multiplayer functionality registration
+- **Admin Tools** - Full admin interface for multiplayer management
+- **Cross-server Support** - Web sharing and franchising capabilities
+- **Real-time Communication** - Chat and voice chat integration
+
+**Cross-references**:
+- **Extends**: Plugin system **File 249214** for hook registration
+- **Integrates with**: Core WTW system for complete functionality
+- **Critical for**: Multiplayer functionality and cross-server collaboration
+
+---
+
+### **File 383843: core/scripts/prime/wtw_input.js** (Advanced Input Processing)
+**Purpose**: Advanced input processing with text validation, highlighting, and 3D object interaction
+
+**Functions**:
+
+1. **`checkKey(zevent, ztextinput, zvalidation, zcomplete, zallowblank)`** - Advanced text validation
+   - Processes keyboard input with comprehensive validation rules
+   - Handles different validation types: numbers, text, emails, URLs
+   - Includes character filtering and text sanitization
+   - **Used by**: Form input validation and 3D text editing
+
+2. **`hilightMoldFast(zmoldname, zcolor)`** - Quick 3D object highlighting
+   - Provides visual feedback for 3D object interactions
+   - Supports multiple highlight colors: green, red, blue, yellow
+   - Temporary highlighting with auto-fade functionality
+   - **Used by**: 3D object interaction and visual feedback
+
+3. **`setHilight(zmold, zcolorset)`** - Persistent 3D object highlighting
+   - Creates persistent highlighting for selected 3D objects
+   - Handles child object highlighting for complex meshes
+   - **Used by**: 3D object selection and editing modes
+
+**Validation Types**:
+- **Numeric** - Number validation with range checking
+- **Text** - Text input with character filtering
+- **Email** - Email format validation
+- **URL** - URL format validation and sanitization
+- **Special Characters** - Filtering of special characters for security
+
+**Highlighting Features**:
+- **Multi-color Support** - Different colors for different interaction types
+- **Temporary Highlighting** - Quick feedback with auto-fade
+- **Persistent Highlighting** - Selection highlighting for editing
+- **Child Object Support** - Highlighting propagation to child meshes
+
+**Cross-references**:
+- **Part of**: Input system **File 381998** for advanced input processing
+- **Uses**: Babylon.js HighlightLayer for visual effects
+- **Critical for**: User input validation and 3D object interaction feedback
+
+---
+
+### **File 376776: core/scripts/prime/wtw_environment.js** (Environmental Systems)
+**Purpose**: Advanced environmental systems for sky, lighting, and atmospheric effects
+
+**Functions**:
+
+1. **`createSky()`** - Sky system creation
+   - Creates different sky types: skybox (HDR/cubemap) or procedural sky
+   - Handles HDR cubemap loading with proper material setup
+   - Creates procedural sky sphere with atmospheric scattering
+   - **Called by**: Scene initialization for environmental setup
+
+2. **`loadSkyScene(zinclination, zluminance, zazimuth, zrayleigh, zturbidity, zmiedirectionalg, zmiecoefficient, zspeedratio)`** - Sky animation system
+   - Animates sky properties for dynamic day/night cycles
+   - Handles complex atmospheric parameters with smooth transitions
+   - Synchronizes sun position and intensity with sky conditions
+   - **Called by**: Environmental animation and time-of-day systems
+
+**Sky System Types**:
+- **HDR Skybox** - High Dynamic Range cubemap environments
+- **Procedural Sky** - Real-time atmospheric scattering simulation
+- **Dynamic Lighting** - Sun position and intensity synchronization
+
+**Atmospheric Parameters**:
+- **Inclination** - Sun angle and position
+- **Luminance** - Sky brightness and exposure
+- **Azimuth** - Sun direction and rotation
+- **Rayleigh** - Atmospheric scattering intensity
+- **Turbidity** - Atmospheric haze and clarity
+- **Mie Coefficients** - Advanced atmospheric scattering
+
+**Key Features**:
+- **Real-time Animation** - Smooth transitions between environmental states
+- **HDR Support** - High Dynamic Range environmental lighting
+- **Atmospheric Simulation** - Physically-based sky rendering
+- **Sun Synchronization** - Automatic sun positioning with sky conditions
+- **Performance Optimization** - Efficient environmental rendering
+
+**Cross-references**:
+- **Uses**: Babylon.js SkyMaterial and animation systems
+- **Integrates with**: Lighting system for environmental illumination
+- **Called by**: Scene initialization and time-of-day systems
+- **Critical for**: Immersive environmental experiences and lighting
+
+---
+
+### **File 278844: core/scripts/admin/wtw_adminmolds.js** (Admin Mold Management)
+**Purpose**: Administrative interface for 3D object management, grouping, and duplicate handling
+
+**Functions**:
+
+1. **`ungroupModel(zobj, zuploadobjectid, zgroupid)`** - 3D object ungrouping
+   - Removes 3D objects from groups for individual management
+   - Updates database and interface to reflect ungrouping
+   - **Called by**: Admin interface for object organization
+
+2. **`selectObjectDuplicate(zuploadobjectid, zobjectfile, zgroupdiv)`** - Duplicate object management
+   - Handles selection and removal of duplicate 3D models
+   - Provides visual feedback with border color changes
+   - **Called by**: Media library for duplicate cleanup
+
+3. **`clearNameFilter()`** - Filter management
+   - Clears object name filters and resets duplicate selection
+   - Resets visual states and form fields
+   - **Called by**: Media library filter management
+
+4. **`loadPreviewScene(zind)`** - 3D model preview system
+   - Creates preview scenes for 3D model visualization
+   - **Called by**: Media library for model preview
+
+5. **`loadObjectDetailsName(zuploadobjectid)`** - Object details loading
+   - Loads detailed information for selected 3D objects
+   - **Called by**: Object detail view in media library
+
+**Key Features**:
+- **Object Grouping** - Group and ungroup related 3D objects
+- **Duplicate Management** - Visual duplicate detection and removal
+- **Preview System** - 3D model preview with separate rendering
+- **Filter Management** - Name-based filtering with visual feedback
+- **Visual Feedback** - Color-coded selection and state indication
+
+**Cross-references**:
+- **Uses**: Upload handlers **File 257332** for object management
+- **Integrates with**: Media library for 3D object administration
+- **Critical for**: 3D content organization and duplicate management
+
+---
+
+### **File 370843: core/scripts/molds/wtw_addmolds.js** (Mold Physics Integration)
+**Purpose**: Physics engine integration for 3D objects with comprehensive physics parameter support
+
+**Functions**:
+
+1. **`completeMold(zmold, zmolddef, zshape, zparentname)`** - Mold finalization with physics
+   - Applies physics properties to completed 3D objects
+   - Handles performance optimization with world matrix freezing
+   - Manages parent-child relationships and cleanup
+   - **Called by**: Mold creation system for object finalization
+
+2. **`addMoldPhysics(zmold, zmolddef, zshape)`** - Physics properties application
+   - Applies comprehensive physics parameters to 3D objects
+   - Handles mass, friction, restitution, trigger shapes
+   - Supports physics centers, extents, and collision points
+   - **Called by**: Mold system when physics is enabled
+
+**Physics Parameters Supported**:
+- **Mass** - Object mass for dynamic physics simulation
+- **Trigger Shapes** - Non-collision trigger zones for events
+- **Sleep State** - Initial sleep state for performance optimization
+- **Center** - Physics center offset from object center
+- **Extents** - Physics bounding box dimensions
+- **Friction** - Surface friction for realistic interactions
+- **Points** - Collision points for complex physics shapes
+
+**Key Features**:
+- **Havok Integration** - Full Havok physics engine support
+- **Performance Optimization** - World matrix freezing for static objects
+- **Complex Physics** - Support for advanced physics parameters
+- **Trigger Support** - Non-collision trigger zones for action zones
+- **Parent Management** - Proper parent-child physics relationships
+
+**Cross-references**:
+- **Part of**: Mold system **File 372127** for 3D object creation
+- **Uses**: Havok physics engine for simulation
+- **Critical for**: Realistic physics simulation and object interactions
+
+---
+
+### **File 372127: core/scripts/molds/wtw_basicmolds.js** (Basic Mold Creation)
+**Purpose**: Core 3D object creation functions for all basic geometric shapes
+
+**Functions**:
+
+1. **`addMoldBox(zmoldname, zlenx, zleny, zlenz)`** - Box mesh creation
+   - Creates box meshes with proper scaling and orientation
+   - Handles action zone double-sided rendering for admin visibility
+   - **Used by**: All box-based 3D objects and containers
+
+2. **`addMoldCylinder(zmoldname, zlenx, zleny, zlenz, zsubdivisions)`** - Cylinder creation
+   - Creates cylinder meshes with tessellation control
+   - Converts to unindexed mesh for material flexibility
+   - **Used by**: Cylindrical objects like pillars, pipes, containers
+
+3. **`addMoldCone(zmoldname, zlenx, zleny, zlenz, zsubdivisions, zspecial1, zspecial2)`** - Cone creation
+   - Creates cone and truncated cone meshes
+   - Variable top and bottom diameters for complex shapes
+   - **Used by**: Cone-shaped objects and tapered structures
+
+4. **`addMoldSpotLight(zmoldname, zlenx, zleny, zlenz, zsubdivisions, zspecial1, zspecial2)`** - Spotlight creation
+   - Creates cone mesh with integrated spotlight
+   - Automatic light attachment and configuration
+   - **Used by**: Lighting system for directional illumination
+
+5. **`addMoldPolygon(zmoldname, zlenx, zleny, zlenz, zspecial1)`** - Polyhedron creation
+   - Creates complex polyhedron shapes (14 different types)
+   - Supports Platonic and Archimedean solids
+   - **Used by**: Complex geometric shapes and decorative objects
+
+6. **`addMoldSphere(zmoldname, zlenx, zleny, zlenz, zsubdivisions)`** - Sphere creation
+   - Creates sphere meshes with tessellation control
+   - **Used by**: Spherical objects, planets, decorative elements
+
+7. **`addMoldTriangle(zmoldname, zlenx, zleny, zlenz, zspecial1)`** - Triangle creation
+   - Creates custom triangle meshes with manual vertex data
+   - Includes custom UV mapping and normal calculation
+   - **Used by**: Triangular objects and custom geometric shapes
+
+**Geometric Shapes Supported**:
+- **Box** - Basic rectangular shapes and containers
+- **Cylinder** - Cylindrical objects with variable tessellation
+- **Cone** - Tapered objects with variable top/bottom diameters
+- **Sphere** - Spherical objects with tessellation control
+- **Polyhedron** - 14 different complex polyhedron types
+- **Triangle** - Custom triangular shapes with manual vertex control
+- **Spotlight** - Cone with integrated lighting
+
+**Key Features**:
+- **Tessellation Control** - Variable detail levels for performance optimization
+- **Material Flexibility** - Unindexed meshes for complex materials
+- **Lighting Integration** - Built-in lighting for spotlight objects
+- **Admin Visibility** - Special rendering for action zones in admin mode
+- **Performance Optimization** - Efficient mesh creation and scaling
+
+**Cross-references**:
+- **Used by**: Mold system **File 372127** for all 3D object creation
+- **Integrates with**: Physics system **File 370843** for physics properties
+- **Critical for**: All basic 3D object creation and geometric shapes
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
