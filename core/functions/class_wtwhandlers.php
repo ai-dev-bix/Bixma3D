@@ -554,19 +554,33 @@ class wtwhandlers {
 			if (isset($error['type']) && in_array($error['type'], $errors, true)) {
 				$message = addslashes(str_replace("\n","",str_replace("\r","",$error['message'])));
 				try {
-					$conn = new mysqli(wtw_dbserver, wtw_dbusername, base64_decode(wtw_dbpassword), wtw_dbname);
-					if ($conn->connect_error) {
-						$error = "console.log('Connection failed: ".str_replace("'","\'",$conn->connect_error)."');";
-					} else {
+					// OPTIMIZATION: Use optimized database connection instead of direct mysqli
+					global $wtwdb;
+					if (isset($wtwdb) && is_object($wtwdb)) {
+						// Use optimized connection pooling
 						$sql = "insert into ".wtw_tableprefix."errorlog 
 								(message,
 								 logdate)
 								values
 								('".addslashes(str_replace("'","\'",$message))."',
 								 '".date('Y-m-d H:i:s')."');";
-						$conn->query($sql);
+						$wtwdb->query($sql);
+					} else {
+						// FALLBACK: Use direct connection if wtwdb not available
+						$conn = new mysqli(wtw_dbserver, wtw_dbusername, base64_decode(wtw_dbpassword), wtw_dbname);
+						if ($conn->connect_error) {
+							$error = "console.log('Connection failed: ".str_replace("'","\'",$conn->connect_error)."');";
+						} else {
+							$sql = "insert into ".wtw_tableprefix."errorlog 
+									(message,
+									 logdate)
+									values
+									('".addslashes(str_replace("'","\'",$message))."',
+									 '".date('Y-m-d H:i:s')."');";
+							$conn->query($sql);
+						}
+						$conn->close();
 					}
-					$conn->close();
 				} catch (Exception $e) { }
 			}
 		}
