@@ -2247,6 +2247,118 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 366055: core/scripts/hud/wtw_hud_login.js** (HUD Login Interface)
+**Purpose**: 3D login interface with avatar scaling and user authentication
+
+**Functions**:
+
+1. **`mouseOverLoginHUD(zmoldname, zhover)`** - Login button hover effects
+   - Manages visual feedback for login interface buttons
+   - Handles different button types: main, secondary, navigation arrows
+   - Changes material colors for interactive feedback
+   - **Called by**: HUD interaction system for visual feedback
+
+2. **`hudLoginClick(zmoldname)`** - Login interface interaction handler
+   - Processes clicks on login interface elements
+   - Handles avatar scaling controls (X, Y, Z axis adjustments)
+   - Manages login workflow: enter, logout, profile editing
+   - **Called by**: HUD click system for login functionality
+
+**Login Interface Elements**:
+- **Input Fields** - Email, password, display name, profile fields
+- **Avatar Scaling** - Fine and coarse scaling controls for avatar customization
+- **Authentication** - Login, logout, guest access, profile management
+- **Navigation** - Previous/next buttons for multi-step processes
+
+**Key Features**:
+- **Avatar Customization** - Real-time avatar scaling with precise controls
+- **Multi-step Workflow** - Login, profile creation, avatar selection
+- **Visual Feedback** - Color-coded button states for user interaction
+- **Form Validation** - Input validation and error handling
+
+**Cross-references**:
+- **Uses**: HUD system **File 362059** for interface creation
+- **Integrates with**: User authentication system for login processing
+- **Used by**: User login and avatar customization workflows
+- **Critical for**: User authentication and avatar personalization
+
+---
+
+### **File 368195: core/scripts/hud/wtw_hud_profile.js** (HUD Profile Management)
+**Purpose**: 3D user profile editing interface with form management
+
+**Functions**:
+
+1. **`hudGetProfile()`** - Profile form creation and data loading
+   - Creates profile editing interface with input fields
+   - Loads existing user profile data via AJAX
+   - Populates form fields with current user information
+   - **Called by**: HUD system when profile editing is opened
+
+2. **`hudClearProfile()`** - Profile form cleanup
+   - Removes profile input textboxes from DOM
+   - Cleans up HUD form elements and containers
+   - **Called by**: HUD cleanup when switching interfaces
+
+3. **`hudSaveProfile()`** - Profile data persistence
+   - Validates and saves user profile changes
+   - Handles base64 encoding for secure data transmission
+   - Updates user profile via API call
+   - **Called by**: Profile save button in HUD interface
+
+**Profile Fields Managed**:
+- **Display Name** - User's display name in 3D environments
+- **Email** - User's email address
+- **Personal Info** - First name, last name, gender, birth date
+- **Account Info** - User ID and avatar associations
+
+**Key Features**:
+- **Dynamic Form Creation** - Creates HTML input fields for 3D profile editing
+- **Data Validation** - Input validation and sanitization
+- **Secure Transmission** - Base64 encoding for sensitive data
+- **Real-time Updates** - Immediate profile updates with API integration
+- **Form State Management** - Proper cleanup and state management
+
+**Cross-references**:
+- **Uses**: HUD system **File 362059** for interface creation
+- **Integrates with**: User management system for profile updates
+- **Used by**: User profile management and account settings
+- **Critical for**: User account management and profile customization
+
+---
+
+### **File 383116: core/scripts/molds/wtw_3dblog.js** (3D Blog System)
+**Purpose**: 3D blog and content display system with scrolling and text wrapping
+
+**Functions**:
+
+1. **Text Input Processing** - Advanced text input handling
+   - Processes keyboard input with cursor positioning
+   - Handles special characters, shift keys, and navigation keys
+   - Supports text editing with insert, delete, and cursor movement
+   - **Used by**: 3D text input and blog posting interfaces
+
+**Text Input Features**:
+- **Cursor Management** - Visual cursor positioning with '|' character
+- **Special Characters** - Complete keyboard character support including symbols
+- **Navigation Keys** - Home, end, arrow keys for text navigation
+- **Text Editing** - Insert, delete, backspace functionality
+- **Shift Key Support** - Upper case and symbol input
+
+**Key Features**:
+- **3D Text Editing** - Immersive text editing within 3D environments
+- **Blog Interface** - 3D blog posting and content creation
+- **Scrolling System** - 3D scrollable content areas
+- **Text Wrapping** - Automatic text wrapping for 3D text displays
+
+**Cross-references**:
+- **Uses**: 3D form system **File 369743** for text input integration
+- **Integrates with**: HUD system for blog interface
+- **Used by**: 3D content creation and blog posting
+- **Critical for**: 3D content creation and immersive text editing
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
