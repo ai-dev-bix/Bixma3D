@@ -2359,6 +2359,107 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 16800: content/plugins/wtw-3dinternet/connect/wtw-3dinternet-clearavatar.php** (Multiplayer Avatar Cleanup)
+**Purpose**: Multiplayer plugin API endpoint for cleaning up avatar data when users leave 3D scenes
+
+**Functions**:
+
+1. **Avatar Resolution Logic** - Multi-tier avatar lookup system
+   - Primary: Anonymous avatar by instance ID
+   - Secondary: User avatar by user ID and instance
+   - Fallback logic prioritizes logged-in users over anonymous
+   - **Used by**: Multiplayer system for avatar session management
+
+2. **Avatar Data Cleanup** - Complete avatar session cleanup
+   - Deletes user avatar records from multiplayer tables
+   - Removes avatar color customizations
+   - Clears avatar animation states
+   - **Used by**: Session management when users disconnect
+
+**Multiplayer Tables Cleaned**:
+- **useravatars** - Avatar instance and user associations
+- **useravatarcolors** - Avatar color customizations
+- **useravataranimations** - Avatar animation states
+
+**Key Features**:
+- **Session Management** - Proper cleanup when users leave scenes
+- **Anonymous Support** - Handles both logged-in and anonymous users
+- **Instance Tracking** - Links avatars to specific browser instances
+- **Data Integrity** - Prevents orphaned avatar data
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Connect base class **File 245118** for API structure
+- **Critical for**: Multiplayer session management and data cleanup
+
+---
+
+### **File 17100: content/plugins/wtw-3dinternet/connect/wtw-3dinternet-getavatar.php** (Multiplayer Avatar Data)
+**Purpose**: Multiplayer plugin API endpoint for retrieving avatar data in real-time multiplayer sessions
+
+**Functions**:
+
+1. **Avatar Data Retrieval** - Complete avatar information for multiplayer
+   - Retrieves avatar definitions, animations, and customizations
+   - Handles anonymous and registered user avatars
+   - Includes privacy settings and display preferences
+   - **Used by**: Multiplayer system for avatar synchronization
+
+2. **Avatar Animation Processing** - Multiplayer animation data
+   - Retrieves avatar animations with frame ranges and events
+   - Includes sound integration for avatar actions
+   - **Used by**: Multiplayer avatar animation synchronization
+
+**Key Features**:
+- **Real-time Data** - Live avatar data for multiplayer synchronization
+- **Privacy Controls** - User privacy settings for avatar visibility
+- **Animation Sync** - Avatar animation data for multiplayer coordination
+- **Customization Support** - Avatar color and scaling customizations
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Integrates with**: Avatar system **File 228442** for avatar management
+- **Critical for**: Real-time multiplayer avatar synchronization
+
+---
+
+### **File 18177: content/plugins/wtw-3dinternet/functions/class_downloads.php** (Content Distribution System)
+**Purpose**: Advanced content distribution system for sharing 3D webs across servers
+
+**Functions**:
+
+1. **`downloadPluginsRequired(...)`** - Plugin dependency management
+   - Downloads and installs required plugins for shared 3D content
+   - Handles plugin dependency resolution and installation
+   - **Used by**: Content sharing system for plugin compatibility
+
+2. **`downloadUploadObjects(...)`** - 3D asset distribution system
+   - Downloads and processes 3D objects, textures, and animations
+   - Handles file validation, folder creation, and permission setting
+   - Supports multiple 3D file formats: .babylon, .obj, .glb, .fbx, .dae, .stl
+   - **Used by**: 3D content sharing and distribution
+
+**Supported File Types**:
+- **3D Models** - .babylon, .obj, .glb, .fbx, .dae, .stl, .3ds, .c4d
+- **Textures** - .jpg, .png, .gif, .bmp, .tif, .webp
+- **Audio** - .wav, .mp3, .wma, .aac, .flac, .ogg
+- **Video** - .mp4, .webm, .mpg, .avi, .mov, .wmv, .flv
+- **Documents** - .txt, .log, .pdf
+
+**Key Features**:
+- **Cross-server Sharing** - Enables 3D content sharing between servers
+- **File Validation** - Comprehensive file type validation for security
+- **Asset Management** - Complete asset downloading and organization
+- **User Management** - User account creation for shared content access
+- **Permission Management** - Proper file permissions and security
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for content distribution
+- **Uses**: Core handlers **File 246040** for file and user management
+- **Critical for**: 3D content sharing and cross-server collaboration
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
