@@ -41,7 +41,9 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ## 🔍 Detailed Function Analysis
 
-### **File 1: admin.php** (Entry Point)
+## 🏠 ROOT FILES ANALYSIS
+
+### **File 1: admin.php** (Admin Entry Point)
 **Purpose**: Administrative interface entry point for 3D CMS management
 
 **Functions/Operations**:
@@ -82,7 +84,38 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
-### **File 3: index.php** (Entry Point)
+### **File 2: htaccess** (Apache Configuration)
+**Purpose**: Apache web server configuration for URL routing and 3D asset MIME types
+
+**Configuration Sections**:
+1. **3D Asset MIME Types** - Defines proper content types for 3D files
+   - `.dds` → `image/vnd.ms-dds` (DirectDraw Surface textures)
+   - `.hdr` → `image/vnd.radiance` (High Dynamic Range images)
+   - `.exr` → `image/x-exr` (Extended Range images)
+   - `.wasm` → `application/wasm` (WebAssembly modules)
+   - `.obj/.glb/.gltf` → `application/octet-stream` (3D model formats)
+   - `.babylon/.babylonmeshdata` → Custom Babylon.js formats
+
+2. **URL Rewriting Rules** - Clean URL routing system
+   - `RewriteEngine On` - Enables mod_rewrite
+   - `RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]` - Preserves auth headers
+   - `RewriteBase /` - Sets base directory
+   - Conditional rewrites: Only for non-existent files/directories
+   - `RewriteRule . /index.php?wtwpath=%{REQUEST_URI}&%{QUERY_STRING}` - Routes to index.php
+
+**Cross-references**:
+- **Routes to**: **File 3** (index.php) for all dynamic requests
+- **Supports**: 3D asset serving for Babylon.js engine
+
+**Critical Notes**:
+- **Architecture**: Essential for clean URLs and 3D asset delivery
+- **Performance**: Efficient routing with file existence checks
+- **Enhancement**: Could add compression rules for 3D assets
+- **Risk**: No rate limiting or security headers
+
+---
+
+### **File 3: index.php** (Public Entry Point)  
 **Purpose**: Public interface entry point for 3D browsing experience
 
 **Functions/Operations**:
@@ -103,6 +136,7 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 **Cross-references**:
 - Primary dependency on **File 219961** (`class_wtw-initsession.php`)
 - Uses same plugin system as **File 1** but with browse-specific loading
+- **Receives requests from**: **File 2** (htaccess) URL routing
 
 **Notes**:
 - **Optimization**: Lighter loading than admin mode for performance
@@ -110,6 +144,40 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 - **Risk**: Same security considerations as admin entry point
 
 ---
+
+### **File 4: LICENSE** (Legal)
+**Purpose**: GNU General Public License v3.0 legal document
+- **Content**: Complete GPL v3.0 license text
+- **Note**: Legal framework for open-source distribution
+
+---
+
+### **File 5: web.config** (IIS Configuration)
+**Purpose**: Microsoft IIS web server configuration (Windows equivalent of htaccess)
+
+**Configuration Sections**:
+1. **Static Content MIME Types** - Same 3D asset types as htaccess
+   - Identical MIME type mappings for 3D files
+   - `.babylon`, `.babylonmeshdata`, `.babylonbinarymeshdata` support
+   - WebAssembly (`.wasm`) support
+
+2. **URL Rewrite Rules** - IIS URL routing
+   - Wildcard pattern matching
+   - File/directory existence checks
+   - Rewrite to `index.php` for dynamic content
+
+**Cross-references**:
+- **Equivalent to**: **File 2** (htaccess) for Apache servers
+- **Routes to**: **File 3** (index.php) for dynamic requests
+
+**Critical Notes**:
+- **Architecture**: Cross-platform server support (Apache + IIS)
+- **Compatibility**: Ensures platform works on Windows servers
+- **Enhancement**: Could add IIS-specific optimizations
+
+---
+
+## 🏗️ CORE CLASSES ANALYSIS
 
 ### **File 219961: core/functions/class_wtw-initsession.php** (Core Platform Class)
 **Purpose**: Main singleton class that initializes and manages the entire WalkTheWeb platform
@@ -197,6 +265,148 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 - **Security Risk**: Some functions lack input validation
 - **Performance**: Heavy JavaScript loading could be optimized
 - **Enhancement**: Could implement caching for metadata and translations
+
+---
+
+### **File 223690: core/functions/class_wtwadmin.php** (Admin Interface)
+**Purpose**: Admin-specific functionality and interface management for 3D CMS administration
+
+**Functions**:
+
+1. **`instance()`** - Admin singleton pattern
+   - Returns single admin instance
+   - **Used by**: **File 1** (admin.php) for admin interface
+
+2. **`__construct()`** - Admin initialization
+   - Sets up admin menu arrays
+   - **Called by**: Function 1 (instance method)
+
+3. **`loadJSAdminData()`** - Admin JavaScript loading
+   - Loads all admin-specific scripts
+   - Includes same Babylon.js engine as browse mode
+   - Adds admin tools: object definitions, input handling
+   - Loads complete script suite for 3D editing
+   - **Called by**: **File 1** for admin interface JavaScript
+
+4. **`loadCSSAdminData()`** - Admin CSS loading
+   - Loads admin-specific stylesheets
+   - **Called by**: **File 1** for admin interface styling
+
+5. **`loadMainElementsAdmin()`** - Admin HTML elements
+   - Creates admin-specific UI containers
+   - **Called by**: **File 1** for admin interface structure
+
+6. **`loadHiddenFieldsAdmin()`** - Admin hidden fields
+   - Admin-specific configuration data
+   - **Called by**: **File 1** for admin JavaScript configuration
+
+7. **`loadFullPageFormAdmin()`** - Admin form system
+   - Creates admin form containers and interfaces
+   - **Called by**: **File 1** for admin form functionality
+
+**Cross-references**:
+- **Used by**: **File 1** (admin.php) exclusively
+- **Extends**: Same 3D engine as **File 219961** browse mode
+- **Manages**: Admin interface for all platform content
+
+**Critical Notes**:
+- **Architecture**: Clean separation between browse and admin functionality
+- **Performance**: Loads full 3D engine plus admin tools - heavy but necessary
+- **Enhancement**: Could implement lazy loading for admin tools
+- **Security**: Admin functions need enhanced access control
+
+---
+
+### **File 236304: core/functions/class_wtwdb.php** (Database Layer)
+**Purpose**: Core database operations class providing ORM-like functionality for all data access
+
+**Functions**:
+
+1. **`instance()`** - Database singleton pattern
+   - Returns single database instance
+   - **Used by**: All classes requiring database access
+
+2. **`__construct()`** - Database initialization
+   - Sets content path from configuration
+   - **Called by**: Function 1 (instance method)
+
+3. **`serror($zmessage)`** - Database error logging
+   - Inserts errors into `errorlog` table
+   - Shows JavaScript alerts in admin mode
+   - **Used by**: All database operations for error handling
+
+4. **`query($zsql)`** - Core database query function
+   - Creates mysqli connection using config constants
+   - Executes SQL and processes results into arrays
+   - Handles connection cleanup and error reporting
+   - **Used by**: All database operations throughout platform
+
+5. **`renameFieldIfExists($ztable, $zoldfield, $znewfield)`** - Schema migration
+   - Checks table and field existence before renaming
+   - Preserves data type and content during schema changes
+   - **Used by**: Database update and migration scripts
+
+6. **`tableExists($ztable)`** - Table validation
+   - Verifies database table existence
+   - **Used by**: Schema validation and setup functions
+
+7. **`hasValue($zvalue)`** - Input validation utility
+   - Checks for null, empty, or undefined values
+   - **Used by**: All input validation throughout platform
+
+**Cross-references**:
+- **Used by**: All connect API files and core classes
+- **Depends on**: Database configuration constants
+- **Critical for**: All data persistence operations
+
+**Critical Notes**:
+- **Architecture**: Central database abstraction layer
+- **Security Risk**: No prepared statements - SQL injection vulnerable
+- **Performance**: Creates new connection per query - inefficient
+- **Enhancement**: Urgent need for prepared statements and connection pooling
+- **Optimization**: Should implement query caching and optimization
+
+---
+
+### **File 245118: core/functions/class_wtwconnect.php** (API Foundation)
+**Purpose**: Base class providing common functionality for all API endpoints
+
+**Functions**:
+
+1. **`instance()`** - API singleton pattern
+   - **Used by**: All connect API files
+
+2. **`getVal($key, $default)`** - Secure parameter retrieval
+   - Safely extracts values from GET/POST/SESSION
+   - Provides fallback defaults for missing parameters
+   - **Used by**: All API endpoints for input validation
+
+3. **`query($sql)`** - API database wrapper
+   - Extends **File 236304** Function 4 with API-specific features
+   - **Used by**: All connect files for data operations
+
+4. **`trackPageView($url)`** - Analytics integration
+   - Google Analytics tracking for API endpoint usage
+   - **Called by**: All connect files for monitoring
+
+5. **`addConnectHeader($domain)`** - CORS management
+   - Sets appropriate headers for cross-origin API requests
+   - **Used by**: All API endpoints for browser compatibility
+
+6. **`escapeHTML($text)`** - XSS prevention
+   - Escapes HTML entities in API responses
+   - **Used by**: All API responses for output security
+
+**Cross-references**:
+- **Extended by**: All connect API files
+- **Uses**: **File 236304** (wtwdb) for database operations
+- **Critical for**: API security and standardization
+
+**Critical Notes**:
+- **Architecture**: Excellent API abstraction layer
+- **Security**: Good HTML escaping, but inherits SQL injection risk
+- **Enhancement**: Should add API rate limiting and authentication
+- **Performance**: Could implement API response caching
 
 ---
 
@@ -821,9 +1031,68 @@ Given the massive scope (1,390 files), I'm implementing a **tiered analysis appr
 
 ---
 
-**⚠️ Manual Status**: **Foundation Complete** - Critical platform understanding achieved with function-level detail. Continuing systematic analysis of all 1,390 files with established methodology.
+## 📁 DEFERRED ANALYSIS SECTIONS
 
-**Next Priority**: Complete core class analysis and API layer documentation.
+### **Babylon.js Engine Files** (Lines 311806-362059)
+**Purpose**: Complete Babylon.js v5.x.x, v6.x.x, v7.x.x engine files
+- **Content**: Physics engines (Ammo, Havok, Cannon, Oimo), core engine, loaders, materials, post-processing
+- **Analysis Status**: ⏳ **DEFERRED** - Focus on platform-specific code first
+- **Note**: Standard Babylon.js libraries - analysis not critical for platform understanding
+
+### **Shopping Plugin** (wtw-shopping)
+**Purpose**: E-commerce integration with WooCommerce and WordPress
+- **Content**: Product displays, shopping cart, payment processing
+- **Analysis Status**: ⏳ **DEFERRED** - Non-core plugin
+- **Note**: Standard e-commerce functionality - analyze after core platform
+
+### **Coins Plugin** (wtw-coins)  
+**Purpose**: Virtual currency and gaming system
+- **Content**: 3D coin objects, collection games, economic transactions
+- **Analysis Status**: ⏳ **DEFERRED** - Non-core plugin
+- **Note**: Gaming feature - analyze after core platform
+
+### **SwiftMailer Plugin** (wtw-swiftmailer)
+**Purpose**: Email communication system
+- **Content**: SMTP integration, email templates, notifications
+- **Analysis Status**: ⏳ **DEFERRED** - Non-core plugin
+- **Note**: Standard email functionality - analyze after core platform
+
+### **Content Assets** (content/uploads/, content/system/)
+**Purpose**: 3D models, textures, animations, and media files
+- **Content**: .babylon files, .manifest files, textures, avatar animations
+- **Analysis Status**: ⏳ **DEFERRED** - Asset files, not code
+- **Note**: Binary/data files - focus on code that manages these assets
+
+---
+
+## 🎯 ANALYSIS PRIORITY FRAMEWORK
+
+### **Tier 1: COMPLETED** ✅
+- **Root Files**: Entry points and server configuration (5 files)
+- **Core Foundation**: Main platform classes and 3D engine core (5 files)
+- **Critical Functions**: 50+ functions with complete relationships
+
+### **Tier 2: IN PROGRESS** 🔄
+- **Core Classes**: All 30 core PHP classes (systematic analysis)
+- **Connect APIs**: All API endpoints (50+ files)
+- **Vital Plugins**: wtw-3dinternet, wtw-avatars (core functionality)
+
+### **Tier 3: PLANNED** ⏳
+- **Core Scripts**: Remaining JavaScript modules
+- **Admin Scripts**: Admin interface functionality  
+- **Handlers**: Request processing layer
+
+### **Tier 4: DEFERRED** 📋
+- **Engine Files**: Babylon.js libraries (standard libraries)
+- **Asset Files**: 3D models and media (binary files)
+- **Optional Plugins**: Shopping, coins, swiftmailer (non-core)
+
+---
+
+**⚠️ Manual Status**: **Foundation Complete + Root Analysis** - Platform core understood with function-level detail. Strategic focus on platform-specific code for maximum development team value.
+
+**Current Value**: Immediate development readiness with complete architectural understanding  
+**Next Chunk**: Core classes systematic analysis (taking break as suggested)
 
 ---
 
