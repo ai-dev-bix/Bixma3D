@@ -1336,6 +1336,140 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 230779: core/functions/class_wtwbuildingmolds.php** (Building Template System)
+**Purpose**: Database operations for 3D building molds (templates) with comprehensive material and physics properties
+
+**Functions**:
+
+1. **`instance()`** - Building molds singleton pattern
+   - **Used by**: All building template operations
+
+2. **`saveBuildingMold(...)`** - Building template persistence (70+ parameters)
+   - Comprehensive building template creation/update system
+   - Handles complete 3D object properties: materials, textures, physics, sound
+   - Includes action zone integration and CSG operations
+   - **Parameters**: Spatial data, materials, textures, physics, sound, video, CSG
+   - **Used by**: Building template creation and editing interface
+
+**Key Features**:
+- **Complete Material System** - Diffuse, specular, emissive, ambient colors
+- **Multi-texture Support** - Base textures, bump maps, height maps, mix maps
+- **Advanced Physics** - Full physics body configuration with constraints
+- **3D Audio Integration** - Positional sound with attenuation and cone settings
+- **Video Textures** - Video playback with poster images
+- **CSG Operations** - Constructive Solid Geometry for complex shapes
+- **Action Zone Integration** - Load/unload zones and interactive triggers
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for template storage
+- **Uses**: Handlers class **File 246040** for validation and access control
+- **Integrates with**: Upload system **File 257332** for media assets
+- **Critical for**: 3D building template system and content creation
+
+---
+
+### **File 234896: core/functions/class_wtwcommunitymolds.php** (Community Template System)
+**Purpose**: Database operations for 3D community molds (templates) with environmental and terrain features
+
+**Functions**:
+
+1. **`instance()`** - Community molds singleton pattern
+   - **Used by**: All community template operations
+
+2. **`saveCommunityMold(...)`** - Community template persistence (70+ parameters)
+   - Comprehensive community template creation/update system
+   - Handles terrain features, environmental settings, and large-scale 3D objects
+   - Includes height maps, terrain generation, and environmental physics
+   - **Parameters**: Terrain data, environmental settings, materials, physics
+   - **Used by**: Community template creation and editing interface
+
+**Key Features**:
+- **Terrain System** - Height maps, min/max height controls, terrain generation
+- **Environmental Integration** - Community-scale environmental settings
+- **Large-scale Physics** - Physics for community-scale objects and terrain
+- **Multi-texture Terrain** - Complex terrain texturing with mix maps
+- **Environmental Audio** - Ambient sound systems for large spaces
+- **CSG Terrain Operations** - Complex terrain modification capabilities
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for template storage
+- **Uses**: Handlers class **File 246040** for validation and access control
+- **Integrates with**: Building molds **File 230779** for hierarchical content
+- **Critical for**: 3D community template system and environmental design
+
+---
+
+### **File 8650: connect/connectinggrids.php** (3D Object Placement API)
+**Purpose**: RESTful API endpoint for retrieving 3D object placement data within hierarchical scenes
+
+**Functions**:
+
+1. **Complex Hierarchical Query System** - Multi-union query architecture
+   - Retrieves molds from communities, buildings, and things
+   - Handles connecting grid relationships and load zones
+   - Includes complete material and texture information
+   - **Used by**: 3D scene composition and object placement
+
+2. **Graphics Level Optimization** - Adaptive quality system
+   - Switches between original and web-size textures based on performance settings
+   - Handles forced graphics level overrides
+   - **Used by**: Performance optimization in 3D scenes
+
+3. **CSG Integration** - Constructive Solid Geometry support
+   - Counts CSG operations for complex object combinations
+   - **Used by**: Advanced 3D modeling and object combination
+
+**Key Data Elements**:
+- **Spatial Relationships** - Position, scaling, rotation for all objects
+- **Material Properties** - Complete texture and material information
+- **Load Zone Integration** - Performance-based content loading
+- **Analytics Integration** - Tracking for all 3D objects
+- **Access Control** - User permissions for object visibility
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Integrates with**: Connecting grids class **File 235888** for placement logic
+- **Used by**: 3D scene loading and object composition systems
+- **Critical for**: Hierarchical 3D content delivery and performance optimization
+
+---
+
+### **File 12436: connect/avatar.php** (Avatar Data API)
+**Purpose**: RESTful API endpoint for comprehensive avatar information including animations and content ratings
+
+**Functions**:
+
+1. **Avatar Animation Processing** - Complete animation system data
+   - Retrieves all avatar animations with frame ranges and sound integration
+   - Includes animation events, priorities, and loop settings
+   - Handles sound synchronization with distance controls
+   - **Used by**: Avatar animation system and character control
+
+2. **Content Rating System** - Avatar content classification
+   - Retrieves content ratings and warnings for avatars
+   - Supports age-appropriate content filtering
+   - **Used by**: Content moderation and age-appropriate filtering
+
+3. **Avatar File Management** - Complete avatar asset delivery
+   - Lists all files associated with avatar (models, textures, animations)
+   - Handles avatar versioning and update tracking
+   - **Used by**: Avatar loading and asset management
+
+**Key Features**:
+- **Complete Animation Library** - All avatar animations with timing and sound
+- **Multi-version Support** - Avatar version management and tracking
+- **Content Safety** - Rating system for appropriate content delivery
+- **Asset Management** - Complete file listing for avatar resources
+- **User Permissions** - Access control for avatar sharing and usage
+
+**Cross-references**:
+- **Extends**: Connect base class **File 245118** for API structure
+- **Integrates with**: Avatar system **File 228442** for avatar management
+- **Uses**: Animation system **File 227818** for animation data
+- **Critical for**: Avatar delivery, animation control, and content safety
+
+---
+
 ## 🌐 CONNECT API LAYER ANALYSIS
 
 ### **File 954: connect/actionzone.php** (Action Zone API)
