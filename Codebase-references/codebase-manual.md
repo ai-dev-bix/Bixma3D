@@ -3568,6 +3568,158 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 21055: core/handlers/wtw-3dinternet-downloads.php** (Advanced Download Handler)
+**Purpose**: Server-side handler for complex 3D content downloads with comprehensive environmental data processing
+
+**Functions**:
+
+1. **Community Download Processing** - Complete 3D community download system
+   - Processes all environmental parameters: lighting, sky, water, fog settings
+   - Handles physics properties: gravity, collision detection
+   - Manages texture systems with graphics level optimization
+   - **Used by**: Download system for cross-server community sharing
+
+**Environmental Parameters Processed**:
+- **Lighting System** - Sun direction, intensity, diffuse/specular colors, backlight configuration
+- **Sky System** - Sky type, size, skybox configuration, atmospheric parameters
+- **Water System** - Position, wave properties, color blending, bump textures
+- **Fog System** - Fog mode, density, start/end distances, color
+- **Physics System** - Gravity, ground position, collision settings
+
+**Graphics Optimization**:
+- **Multi-texture Support** - Base, bump, height, mix map textures with R/G/B channels
+- **Graphics Level Switching** - Automatic texture quality based on performance settings
+- **Asset Resolution** - Original vs web-size texture selection based on graphics level
+
+**Cross-references**:
+- **Part of**: Download system **File 31055** for content distribution
+- **Uses**: Database handlers for complex data processing
+- **Critical for**: Cross-server 3D environment sharing with full fidelity
+
+---
+
+### **File 16155: content/plugins/wtw-3dinternet/main.js** (Voice Chat Engine)
+**Purpose**: Advanced WebRTC voice chat engine with AudioWorklet processing
+
+**Functions**:
+
+1. **`setupRecordWorklet()`** - Audio recording setup
+   - Sets up AudioWorklet for real-time voice processing
+   - Handles microphone access and audio stream creation
+   - **Called by**: Voice chat initialization for recording
+
+2. **`createAudioContext()`** - Audio context management
+   - Creates separate audio contexts for sending and receiving
+   - **Called by**: Voice chat system for audio processing
+
+3. **`connectToVoiceServer(username)`** - Voice server connection
+   - Establishes Socket.io connection for voice communication
+   - Handles user connection/disconnection events
+   - **Called by**: Voice chat system for server communication
+
+4. **`addUserAudio(id)` / `removeUserAudio(id)`** - User audio management
+   - Manages individual user audio streams with AudioWorklet
+   - **Called by**: Voice chat for user audio processing
+
+**Voice Chat Features**:
+- **WebRTC Integration** - Real-time voice communication
+- **AudioWorklet Processing** - Low-latency audio processing
+- **Buffer Management** - Circular buffer system for audio streaming
+- **Mute Control** - Real-time mute/unmute functionality
+- **Multi-user Support** - Individual audio streams per user
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 34900** for voice communication
+- **Uses**: WebRTC and AudioWorklet for real-time audio
+- **Critical for**: Advanced multiplayer voice communication
+
+---
+
+### **File 16300: content/plugins/wtw-3dinternet/playback-processor.js** (Audio Playback Processor)
+**Purpose**: AudioWorklet processor for real-time voice playback in multiplayer environments
+
+**Functions**:
+
+1. **AudioWorklet Processor** - Real-time audio playback processing
+   - Manages shared audio buffers for voice playback
+   - Handles circular buffer management for continuous audio
+   - **Used by**: Voice chat system for audio output processing
+
+**Audio Processing Features**:
+- **Shared Buffer System** - Efficient audio buffer sharing
+- **Real-time Processing** - Low-latency audio playback
+- **Buffer Management** - 8192 * 4 buffer size for optimal performance
+
+**Cross-references**:
+- **Part of**: Voice chat engine **File 16155** for audio processing
+- **Uses**: AudioWorklet API for real-time audio
+- **Critical for**: Real-time voice playback in multiplayer environments
+
+---
+
+### **File 377955: core/scripts/prime/wtw_constructor.js** (Global Variables System)
+**Purpose**: Comprehensive global variable initialization for the entire WTW platform
+
+**Variable Categories**:
+
+1. **XR and Mobile Detection Variables**
+   - `environment` - Default environment for XR (VR/AR) support
+   - `xrHelper` - XR experience helper for VR/AR functionality
+   - `isMobile` - Mobile device detection for optimization
+   - `isVRorAR` - VR/AR mode detection for camera and interface adjustments
+
+2. **Navigation and Spatial Variables**
+   - `closestDistance` - Distance to closest building for compass navigation
+   - `closestAngle` - Angle to closest building for compass arrow
+   - `closestWebID` - ID of closest web object for navigation
+
+3. **Engine and Performance Variables**
+   - `babylonVersion` - Babylon.js engine version (v7.x.x)
+   - `physicsEngine` - Physics engine selection (havok, cannon, oimo, none)
+   - `highlightLayer` - 3D object highlighting system
+   - `fps` - Real-time frames per second tracking
+   - `pause` - Scene render pause state management
+
+4. **Activity and Session Variables**
+   - `isInitCycle` - Initial loading cycle flag (5-second window)
+   - `activityTimer` - Inactivity detection for performance optimization
+   - `holdPosition` - Avatar position tracking for activity detection
+   - `allowCookies` - Cookie consent management
+   - `pendingCookies` - Queued cookies pending user consent
+
+5. **Authentication and Access Variables**
+   - `globalLogins` - WalkTheWeb global user login toggle
+   - `localLogins` - Local server login toggle
+   - `anonymousLogins` - Anonymous avatar access toggle
+   - `roles` - User role array for interface masking
+
+6. **Optimization and Performance Variables**
+   - `optimizeScene` - Scene optimization trigger flag
+   - `octree` - Spatial optimization for large scenes
+   - `enableOfflineSupport` - Asset caching for browse/admin modes
+   - `cleanCachedTextureBuffer` - Memory optimization for texture caching
+
+7. **Processing Queue Variables**
+   - `loadMoldQueue` - Mold creation queue for smooth loading
+   - `checkLoadQueue` - Queue processing state management
+   - `analyticsQueue` - Analytics reporting queue
+   - `checkShownMolds` - Mold visibility processing state
+   - `checkZones` - Action zone checking flag
+   - `loadedJSFiles` - Dynamic JavaScript file tracking
+
+**Key Features**:
+- **Performance Optimization** - Multiple optimization flags and queues
+- **XR/VR/AR Support** - Complete extended reality variable system
+- **Mobile Optimization** - Mobile-specific performance adjustments
+- **Queue Management** - Multiple processing queues for smooth performance
+- **Session Management** - Authentication and cookie consent variables
+
+**Cross-references**:
+- **Used by**: All WTW JavaScript files for global state management
+- **Critical for**: Platform initialization, performance optimization, and state management
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
