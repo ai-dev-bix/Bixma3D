@@ -2647,11 +2647,21 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
    - Manages parent-child relationships and cleanup
    - **Called by**: Mold creation system for object finalization
 
-2. **`addMoldPhysics(zmold, zmolddef, zshape)`** - Physics properties application
-   - Applies comprehensive physics parameters to 3D objects
-   - Handles mass, friction, restitution, trigger shapes
-   - Supports physics centers, extents, and collision points
-   - **Called by**: Mold system when physics is enabled
+2. **`buildPhysicsParameters(zphysicsdef)`** - ⭐ **NEW**: Centralized physics parameter builder
+   - Extracts and validates all physics parameters from mold definition
+   - Handles Vector3/Quaternion construction for complex properties (center, extents, rotation)
+   - Provides consistent parameter building across platform and uploaded models
+   - **Created during**: Collision fix project to eliminate code duplication and improve reliability
+   - **Enhancement**: Centralized logic improves maintainability and consistency
+
+3. **`addMoldPhysics(zmold, zmolddef, zshape)`** - Physics properties application **[ENHANCED]**
+   - **REFACTORED**: Now uses centralized `buildPhysicsParameters()` helper
+   - **IMPROVED**: Fixed mesh iteration for `babylonfile` using `getChildMeshes(true)` instead of scene iteration
+   - **ENHANCED**: Added fallback collision detection when physics application fails
+   - Applies comprehensive physics parameters to 3D objects (mass, friction, restitution, trigger shapes)
+   - **CRITICAL INSIGHT**: Deliberately excluded from `babylonfile` by `completeMold()` design
+   - **Called by**: Mold system when physics is enabled (excludes uploaded models by design)
+   - **Collision Fix**: Enhanced with robust error handling and automatic fallbacks
 
 **Physics Parameters Supported**:
 - **Mass** - Object mass for dynamic physics simulation
@@ -4433,10 +4443,26 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
    - Validates side count (minimum 0)
    - **Used by**: Complex geometric shapes
 
+6. **`addMoldBabylonFile(zmoldname, zmolddef, zlenx, zleny, zlenz)`** - ⭐ **COLLISION FIX APPLIED**
+   - **CRITICAL FUNCTION**: Handles uploaded 3D models (GLB, GLTF, OBJ, Babylon files)
+   - **MAJOR ENHANCEMENT**: Fixed async loading race condition for physics application
+   - **IMPROVED PHYSICS**: Now applies Havok physics directly to loaded meshes within ImportMeshAsync callback
+   - **ENHANCED COLLISION**: Added robust fallback to Babylon collision detection when physics fails
+   - **PERFORMANCE FIX**: Added physics check to prevent freezeWorldMatrix on physics-enabled meshes
+   - Uses BABYLON.SceneLoader.ImportMeshAsync for asynchronous model loading
+   - Handles mesh parenting, material application, and animation setup
+   - **FORENSIC INSIGHT**: This function bypasses `completeMold()` physics exclusion by design
+   - **Cross-references**: Uses **File 370843** `buildPhysicsParameters()` for physics consistency
+   - **Critical for**: User-uploaded 3D content integration with proper collision detection
+   - **Enhancement**: Now provides production-ready collision detection for all uploaded models
+   - **Risk Eliminated**: Fixed critical freezeWorldMatrix conflict that would break physics simulation
+
 **Cross-references**:
 - **Called by**: Scene loading system in **File 378502** Function 10
-- **Uses**: Babylon.js MeshBuilder API
+- **Uses**: Babylon.js MeshBuilder API and SceneLoader for imported models
+- **Enhanced with**: Physics system **File 370843** for collision detection
 - **Integrates with**: Action zone system for interactive objects
+- **Critical for**: User-uploaded 3D content with proper collision physics
 
 **Critical Notes**:
 - **Architecture**: Core template system enabling rapid 3D content creation

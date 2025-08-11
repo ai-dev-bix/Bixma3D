@@ -91,4 +91,37 @@ The systematic approach is delivering exactly what was requested:
 - Comprehensive coverage leaving "no stone unturned"
 - Consistent quality and depth throughout
 
-**Ready to resume systematic analysis when UX/UI project is complete.**
+---
+
+## **Recent Development Experience: Collision Fix Project**
+
+### **✅ SUCCESSFUL PROJECT COMPLETION (December 2024)**
+- **Project**: GLB Model Collision Detection Fix
+- **Status**: ✅ **COMPLETE SUCCESS** - Client confirmed working solution
+- **Impact**: Resolved critical collision issue with uploaded 3D models
+
+### **🧠 Key Insights Gained**:
+1. **Platform Architecture**: Discovered dual physics/collision system design patterns
+2. **Async Complexity**: Learned critical timing coordination for 3D model loading
+3. **Performance Patterns**: Identified world matrix freezing optimization conflicts
+4. **Forensic Analysis Value**: Prevented serious `freezeWorldMatrix` conflict through deep validation
+
+### **📁 Documentation Enhanced**:
+- **Project 2, physics engine and avatars collision.md**: Complete analysis and solution documentation
+- **experiences.md**: New document for accumulating platform insights and development patterns
+- **codebase-manual.md**: Updated with collision system understanding and enhanced function documentation
+
+### **🔧 Code Enhancements Applied**:
+- **File 370843**: Added `buildPhysicsParameters()` helper and enhanced `addMoldPhysics()`
+- **File 372127**: Fixed async race condition and added robust collision fallbacks
+- **Production Ready**: All changes tested and validated with comprehensive forensic analysis
+
+### **💡 Platform Understanding Deepened**:
+- **Dual Collision Systems**: Platform uses BOTH Havok physics AND Babylon collision detection safely
+- **Avatar Architecture**: Avatars use ONLY Babylon collision (ellipsoid-based) - NO physics engine
+- **Async Coordination**: 3D model loading requires careful timing for physics application
+- **Performance Optimization**: World matrix freezing critical but must exclude physics-enabled meshes
+
+---
+
+**Ready to resume systematic analysis with enhanced platform understanding and forensic validation methodology.**
