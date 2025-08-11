@@ -822,6 +822,145 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+## 🌐 CONNECT API LAYER ANALYSIS
+
+### **File 954: connect/actionzone.php** (Action Zone API)
+**Purpose**: RESTful API endpoint for retrieving detailed action zone information
+*[Previously analyzed in detail - see existing documentation]*
+
+---
+
+### **File 2921: connect/building.php** (Building API)
+**Purpose**: RESTful API endpoint for retrieving comprehensive building information
+*[Previously analyzed in detail - see existing documentation]*
+
+---
+
+### **File 2332: connect/avatar.php** (Avatar Data API)
+**Purpose**: Provides basic avatar information for cross-server 3D avatar integration
+
+**Functions**:
+1. **Analytics Tracking** - Google Analytics integration via **File 245118** Function 4
+2. **Parameter Extraction** - Gets avatar ID via **File 245118** Function 2
+3. **Avatar Colors Query** - Retrieves avatar color customization data
+4. **Avatar Animations Query** - Complex query for avatar animations by event type
+5. **Response Formatting** - JSON output with avatar parts and animation definitions
+
+**Cross-references**:
+- **Extends**: **File 245118** (wtwconnect) base functionality
+- **Queries**: Avatar colors and animations tables
+- **Used by**: Cross-server avatar synchronization
+
+**Critical Notes**:
+- **Architecture**: Clean API design for avatar data sharing
+- **Performance**: Complex animation queries could be optimized
+- **Security**: Inherits base class security patterns
+
+---
+
+### **File 13797: connect/useravatar.php** (User Avatar API)
+**Purpose**: Provides user-specific avatar information with complex fallback logic for avatar selection
+
+**Functions**:
+1. **Analytics Tracking** - Standard API tracking
+2. **Parameter Extraction** - Gets user ID, instance ID, avatar ID, global hash
+3. **Avatar Resolution Logic** - Multi-tier fallback system:
+   - First: Direct user avatar ID lookup
+   - Second: User ID-based latest avatar
+   - Third: Selected avatar ID validation
+   - Fourth: Instance ID-based avatar lookup
+4. **User Avatar Data Assembly** - Builds complete avatar profile
+5. **Response Formatting** - JSON with avatar data, animations, and user context
+
+**Cross-references**:
+- **Extends**: **File 245118** (wtwconnect) base functionality
+- **Uses**: Complex avatar resolution logic
+- **Critical for**: User avatar persistence across sessions
+
+**Critical Notes**:
+- **Architecture**: Sophisticated avatar resolution with proper fallbacks
+- **Performance**: Multiple database queries for resolution - could optimize
+- **Security**: Good parameter validation and user isolation
+
+---
+
+### **File 7321: connect/moldsbywebid.php** (3D Content API)
+**Purpose**: Core API for retrieving all 3D content (molds) for communities, buildings, or things
+
+**Functions**:
+1. **Analytics Tracking** - Standard API tracking
+2. **Parameter Extraction** - Gets web IDs, action zone IDs, graphic level settings
+3. **Complex Mold Query** - Massive query retrieving:
+   - Community molds, building molds, thing molds
+   - Texture and material information
+   - Upload object references
+   - Physics properties
+   - Animation data
+   - Action zone associations
+4. **Graphic Level Processing** - Handles LOD (Level of Detail) for performance
+5. **Response Assembly** - Complete 3D scene data in JSON format
+
+**Cross-references**:
+- **Extends**: **File 245118** (wtwconnect) base functionality
+- **Critical for**: 3D scene loading and rendering
+- **Used by**: **File 378502** (wtw_core.js) for scene construction
+
+**Critical Notes**:
+- **Architecture**: Central API for all 3D content delivery
+- **Performance**: Very large queries - critical optimization target
+- **Enhancement**: Should implement caching and pagination
+- **Risk**: Single point of failure for 3D content loading
+
+---
+
+### **File 6056: connect/dashboard.php** (Admin Dashboard API)
+**Purpose**: Administrative dashboard data providing platform statistics and download queue management
+
+**Functions**:
+1. **Analytics Tracking** - Standard API tracking
+2. **Permission Validation** - Admin role requirement
+3. **Website Size Calculation** - Directory size analysis
+4. **Download Queue Processing** - Pending downloads management
+5. **Platform Statistics Query** - Comprehensive counts:
+   - 3D Communities, Buildings, Things
+   - 3D Avatars and Models
+   - Plugins and Uploads
+   - User avatars and roles
+6. **Response Assembly** - Complete dashboard data in JSON
+
+**Cross-references**:
+- **Extends**: **File 245118** (wtwconnect) base functionality
+- **Requires**: Admin permissions via **File 246040** (handlers)
+- **Used by**: Admin interface dashboard
+
+**Critical Notes**:
+- **Architecture**: Good admin data aggregation
+- **Performance**: Heavy statistics queries - should cache results
+- **Security**: Proper admin-only access control
+- **Enhancement**: Could implement real-time dashboard updates
+
+---
+
+## 📊 **Connect API Pattern Analysis**
+
+### **Standard API Architecture** (All 40+ Connect Files Follow This Pattern):
+
+1. **Base Class Extension** - All extend **File 245118** (wtwconnect)
+2. **Analytics Integration** - Google Analytics tracking
+3. **Parameter Validation** - Secure input handling
+4. **Database Operations** - Complex queries for specific data
+5. **Response Formatting** - JSON output with error handling
+6. **CORS Headers** - Cross-origin support
+
+### **API Categories**:
+- **Content APIs**: actionzone, building, community, thing, moldsbywebid
+- **User APIs**: user, useravatar, userprofile, useraccess
+- **Media APIs**: upload, uploadmedia, sound
+- **Admin APIs**: dashboard, roles, webalias
+- **Integration APIs**: wordpress, share, pluginsrequired
+
+---
+
 ### **File 377919: core/scripts/prime/wtw_constructor.js** (Main JavaScript Class)
 **Purpose**: Defines the main WTWJS JavaScript class with all global variables and initialization
 
