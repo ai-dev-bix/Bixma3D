@@ -65,6 +65,19 @@ window.onload = function() {
 		if (typeof WTW.adminInit == 'function') {
 			WTW.adminInit();
 		}
+		
+		/* OPTIMIZATION: Initialize performance optimization systems after all scripts loaded */
+		if (typeof WTW.initObjectPools == 'function') {
+			WTW.initObjectPools();
+		}
+		if (typeof WTW.initAssetLoadingManager == 'function') {
+			WTW.initAssetLoadingManager();
+		}
+		if (typeof performance !== 'undefined' && performance.memory) {
+			WTW.performanceMetrics.memory.initialUsage = performance.memory.usedJSHeapSize;
+		}
+		WTW.log('Performance optimization systems initialized', 'green');
+		
 	} catch (ex) {
 		WTW.log('core-scripts-prime-wtw_init.js-onload=' + ex.message);
 	}

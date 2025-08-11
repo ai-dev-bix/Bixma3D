@@ -27,62 +27,26 @@ WTWJS.prototype.getMoldList = function() {
 		WTW.moldList[WTW.moldList.length] = 'Disc';
 		WTW.moldList[WTW.moldList.length] = 'Tube';
 		WTW.moldList[WTW.moldList.length] = 'Line';
-			WTW.moldList = WTW.pluginsMolds(WTW.moldList);
-	
-	// OPTIMIZATION: Use DocumentFragment for batch DOM operations (60-80% faster)
-	var startTime = performance.now();
-	var moldsContainer = dGet('wtw_moldsbuttonlist');
-	moldsContainer.innerHTML = '';
-	var fragment = document.createDocumentFragment();
-	
-	for (var i=0;i < WTW.moldList.length;i++) {
-		if (WTW.moldList[i] != null) {
-			var zmoldvalue = WTW.moldList[i].toLowerCase();
-			while (zmoldvalue.indexOf(' ') > -1) {
-				zmoldvalue = zmoldvalue.replace(' ','');
+		WTW.moldList = WTW.pluginsMolds(WTW.moldList);
+		dGet('wtw_moldsbuttonlist').innerHTML = '';
+		for (var i=0;i < WTW.moldList.length;i++) {
+			if (WTW.moldList[i] != null) {
+				var zmoldvalue = WTW.moldList[i].toLowerCase();
+				while (zmoldvalue.indexOf(' ') > -1) {
+					zmoldvalue = zmoldvalue.replace(' ','');
+				}
+				var zoption = document.createElement('option');
+				zoption.text = WTW.moldList[i];
+				zoption.value = zmoldvalue;
+				if (buildingid != '') {
+					dGet('wtw_moldsbuttonlist').innerHTML += "<div id='wtw_baddbuild" + zmoldvalue + "' name='wtw_baddbuild" + zmoldvalue + "' onclick=\"WTW.openAddNewMold('building','" + zmoldvalue + "');\" class='wtw-menulevel2'>" + WTW.moldList[i] + "</div>\r\n";
+				} else if (communityid != '') {
+					dGet('wtw_moldsbuttonlist').innerHTML += "<div id='wtw_baddcomm" + zmoldvalue + "' name='wtw_baddcomm" + zmoldvalue + "' onclick=\"WTW.openAddNewMold('community','" + zmoldvalue + "');\" class='wtw-menulevel2'>" + WTW.moldList[i] + "</div>\r\n";
+				} else if (thingid != '') {
+					dGet('wtw_moldsbuttonlist').innerHTML += "<div id='wtw_baddthing" + zmoldvalue + "' name='wtw_baddthing" + zmoldvalue + "' onclick=\"WTW.openAddNewMold('thing','" + zmoldvalue + "');\" class='wtw-menulevel2'>" + WTW.moldList[i] + "</div>\r\n";
+				}
 			}
-			var zoption = document.createElement('option');
-			zoption.text = WTW.moldList[i];
-			zoption.value = zmoldvalue;
-			
-			// OPTIMIZATION: Create element without innerHTML concatenation
-			var moldButton = document.createElement('div');
-			moldButton.className = 'wtw-menulevel2';
-			moldButton.textContent = WTW.moldList[i];
-			
-			if (buildingid != '') {
-				moldButton.id = 'wtw_baddbuild' + zmoldvalue;
-				moldButton.name = 'wtw_baddbuild' + zmoldvalue;
-				moldButton.onclick = function(value) { 
-					return function() { WTW.openAddNewMold('building', value); }; 
-				}(zmoldvalue);
-			} else if (communityid != '') {
-				moldButton.id = 'wtw_baddcomm' + zmoldvalue;
-				moldButton.name = 'wtw_baddcomm' + zmoldvalue;
-				moldButton.onclick = function(value) { 
-					return function() { WTW.openAddNewMold('community', value); }; 
-				}(zmoldvalue);
-			} else if (thingid != '') {
-				moldButton.id = 'wtw_baddthing' + zmoldvalue;
-				moldButton.name = 'wtw_baddthing' + zmoldvalue;
-				moldButton.onclick = function(value) { 
-					return function() { WTW.openAddNewMold('thing', value); }; 
-				}(zmoldvalue);
-			}
-			
-			fragment.appendChild(moldButton);
 		}
-	}
-	
-	// OPTIMIZATION: Single DOM append operation instead of multiple innerHTML +=
-	moldsContainer.appendChild(fragment);
-	
-	// OPTIMIZATION: Track DOM performance improvement
-	var domTime = performance.now() - startTime;
-	WTW.performanceMetrics.dom.operationCount++;
-	WTW.performanceMetrics.dom.totalDOMTime += domTime;
-	WTW.performanceMetrics.dom.averageDOMTime = WTW.performanceMetrics.dom.totalDOMTime / WTW.performanceMetrics.dom.operationCount;
-	WTW.log('Mold list DOM operation completed in ' + domTime.toFixed(2) + 'ms (optimized)', 'green');
 	} catch (ex) {
 		WTW.log('core-scripts-molds-addmoldlist\r\n getMoldList=' + ex.message);
 	} 

@@ -144,6 +144,58 @@ function WTWJS() {
 	/* Texture caching buffers - set to true to clear buffer of texture paths to free up memory */
 	this.cleanCachedTextureBuffer = true;
 
+	/* OPTIMIZATION: Mesh lookup caching system */
+	this.meshCache = new Map();
+	this.meshCacheStats = { hits: 0, misses: 0, size: 0, hitRate: 0 };
+	this.maxMeshCacheSize = 1000;
+	this.meshCacheEnabled = true;
+	
+	/* OPTIMIZATION: Translation system caching */
+	this.translationCache = new Map();
+	this.currentLanguage = '';
+	this.translationCacheEnabled = true;
+	
+	/* OPTIMIZATION: Performance monitoring */
+	this.performanceMetrics = {
+		database: {
+			queryCount: 0,
+			totalQueryTime: 0,
+			averageQueryTime: 0,
+			slowQueries: [],
+			connectionReuses: 0
+		},
+		dom: {
+			operationCount: 0,
+			totalDOMTime: 0,
+			averageDOMTime: 0,
+			reflowCount: 0
+		},
+		meshLookup: {
+			lookupCount: 0,
+			cacheHits: 0,
+			cacheMisses: 0,
+			averageLookupTime: 0
+		},
+		memory: {
+			initialUsage: 0,
+			currentUsage: 0,
+			peakUsage: 0,
+			gcCount: 0
+		}
+	};
+	
+	/* OPTIMIZATION: Object pooling for Babylon.js objects */
+	this.vector3Pool = [];
+	this.color3Pool = [];
+	this.materialPool = new Map();
+	this.maxPoolSize = 100;
+	
+	/* OPTIMIZATION: Asset loading coordination */
+	this.assetLoadingQueue = [];
+	this.loadingInProgress = new Set();
+	this.loadedAssets = new Map();
+	this.maxConcurrentLoads = 4;
+
 
 /* processing queues, helpers, and listeners */
 	

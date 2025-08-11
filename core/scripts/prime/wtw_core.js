@@ -366,9 +366,20 @@ WTWJS.prototype.initEnvironment = async function() {
 		/* prevent 3d Scene unloading when browser tab is not in focus */
 		engine.renderEvenInBackground = true;
 
-		/* initialize scene */
-		scene = new BABYLON.Scene(engine);        
-		scene.name = 'WalkTheWeb';
+			/* initialize scene */
+	scene = new BABYLON.Scene(engine);        
+	scene.name = 'WalkTheWeb';
+	
+	/* OPTIMIZATION: Initialize performance optimization systems - MOVED TO SAFER TIMING */
+	// Moved to wtw_init.js to ensure all functions are loaded first
+	
+	// OPTIMIZATION: Add cache cleanup on scene disposal (safe to do here)
+	scene.onDisposeObservable.add(() => {
+		if (typeof WTW.clearMeshCache === 'function') {
+			WTW.clearMeshCache();
+			WTW.log('Scene disposed - caches cleared', 'orange');
+		}
+	});
 
 		/* initialize physics engine if it is enabled */
 		switch (WTW.physicsEngine) {
@@ -407,23 +418,38 @@ WTWJS.prototype.initEnvironment = async function() {
 		scene.useMaterialMeshMap = true;
 	
 		scene.useClonedMeshMap = WTW.init.sceneUseClonedMeshMap;
-		/ * set scene to be clearer * /
-		scene.blockMaterialDirtyMechanism = WTW.init.sceneBlockMaterialDirtyMechanism;
-	
-		scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
-	
-		/ * Add Scene Optimizer * /
-		var zoptions = new BABYLON.SceneOptimizerOptions(30, 2000);
-		zoptions.addOptimization(new BABYLON.ShadowsOptimization(0));
-		zoptions.addOptimization(new BABYLON.LensFlaresOptimization(0));
-		zoptions.addOptimization(new BABYLON.PostProcessesOptimization(1));
-		zoptions.addOptimization(new BABYLON.ParticlesOptimization(1));
-		zoptions.addOptimization(new BABYLON.TextureOptimization(2, 256));
-		zoptions.addOptimization(new BABYLON.RenderTargetsOptimization(3));
-		zoptions.addOptimization(new BABYLON.HardwareScalingOptimization(4, 4));
-		var zoptimizer = new BABYLON.SceneOptimizer(scene, zoptions);
-		zoptimizer.start();
-*/		
+			/* set scene to be clearer */
+	scene.blockMaterialDirtyMechanism = WTW.init.sceneBlockMaterialDirtyMechanism;
+
+	scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
+
+	/* OPTIMIZATION: Scene Optimizer - DEACTIVATED FOR SAFETY */
+	// Scene optimizer was causing black screen - will be reactivated after investigation
+	/*
+	var zoptions = new BABYLON.SceneOptimizerOptions(30, 2000); // Target 30 FPS, 2000ms timeout
+	zoptions.addOptimization(new BABYLON.ShadowsOptimization(0));
+	zoptions.addOptimization(new BABYLON.LensFlaresOptimization(0)); 
+	zoptions.addOptimization(new BABYLON.PostProcessesOptimization(1));
+	zoptions.addOptimization(new BABYLON.ParticlesOptimization(1));
+	zoptions.addOptimization(new BABYLON.TextureOptimization(2, 256)); // Reduce textures to 256x256 if needed
+	zoptions.addOptimization(new BABYLON.RenderTargetsOptimization(3));
+	zoptions.addOptimization(new BABYLON.HardwareScalingOptimization(4, 4)); // Scale down by factor of 4 if needed
+
+	// OPTIMIZATION: Add custom optimization callbacks
+	zoptions.onSuccessObservable.add(() => {
+		WTW.log('Scene optimizer: Target performance achieved', 'green');
+	});
+
+	zoptions.onFailureObservable.add(() => {
+		WTW.log('Scene optimizer: Unable to reach target performance', 'orange');
+	});
+
+	var zoptimizer = new BABYLON.SceneOptimizer(scene, zoptions);
+	zoptimizer.start();
+
+	// OPTIMIZATION: Store optimizer reference for manual control
+	WTW.sceneOptimizer = zoptimizer;
+	*/		
 		/* scene light setting  */
 		scene.ambientColor = new BABYLON.Color3.FromHexString(WTW.init.sceneAmbientColor);
 		scene.clearColor = new BABYLON.Color3.FromHexString(WTW.init.sceneClearColor); 
