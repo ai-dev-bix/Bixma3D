@@ -3227,6 +3227,104 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 29155: content/plugins/wtw-3dinternet/scripts/class_main.js** (Multiplayer Control System)
+**Purpose**: Comprehensive multiplayer service management and control panel system
+
+**Functions**:
+
+1. **`changeSwitch(zcheckbox, zchecked)`** - Multiplayer feature toggle system
+   - Controls all multiplayer features: anonymous logins, broadcasts, chat, voice chat
+   - Manages downloads, plugins, sharing, and franchising settings
+   - Saves settings with complete state management
+   - **Called by**: Settings interface for multiplayer configuration
+
+2. **`serviceCheck(zservice)`** - Multiplayer service validation
+   - Checks multiplayer service activation on main WalkTheWeb hub
+   - Handles service status: active, suspended, banned, expired, not found
+   - Provides activation and renewal options for expired services
+   - **Called by**: Multiplayer system for service validation
+
+3. **`enableBroadcasts(zchecked)`** - Broadcast system control
+   - Toggles server-wide broadcast functionality
+   - Updates interface with broadcast status
+   - **Called by**: Settings system for broadcast management
+
+4. **`enableMultiplayer(zchecked)`** - Core multiplayer control
+   - Toggles complete multiplayer functionality
+   - Manages socket connections and service activation
+   - Handles hold/unhold states for multiplayer services
+   - **Called by**: Settings system for multiplayer management
+
+**Multiplayer Features Controlled**:
+- **Anonymous Logins** - Guest user access control
+- **Broadcasts** - Server-wide message broadcasting
+- **Multiplayer Movement** - Avatar movement synchronization
+- **Chat System** - Real-time text communication
+- **Voice Chat** - Real-time voice communication
+- **Downloads** - Content sharing and distribution
+- **Plugins** - Plugin sharing and discovery
+- **Sharing** - 3D content sharing capabilities
+- **Franchising** - Cross-server franchise management
+
+**Service Management**:
+- **Service Activation** - Automatic service activation checking
+- **Status Handling** - Active, suspended, banned, expired, hold states
+- **Renewal System** - Automatic renewal prompts for expired services
+- **Error Management** - Comprehensive error handling and user feedback
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Integrates with**: Settings system for multiplayer configuration
+- **Uses**: WalkTheWeb hub for service validation
+- **Critical for**: Complete multiplayer service management and control
+
+---
+
+### **File 31055: content/plugins/wtw-3dinternet/scripts/downloads.js** (Content Download System)
+**Purpose**: Advanced 3D content download system with progress tracking and cross-server content sharing
+
+**Functions**:
+
+1. **`updateCols(zobj, zcols)`** - Download interface column management
+   - Manages download interface layout with 4-column display options
+   - Updates visual selection states for download views
+   - Refreshes search results based on selected view type
+   - **Called by**: Download interface for layout management
+
+2. **`downloadWeb(ztrigger, ztemplatename, zwebid, znewwebid, zwebtype, zusertoken, zparentwebid, zparentwebtype, zoriginalwebid, zoriginalwebtype)`** - 3D web download orchestration
+   - Orchestrates complete 3D web downloads with progress tracking
+   - Creates visual progress indicators with stage-by-stage updates
+   - Handles different content types: communities, buildings, things, avatars
+   - **Called by**: Content discovery system for cross-server downloads
+
+**Download Interface Features**:
+- **4-Column Layout** - Flexible display options for content browsing
+- **Visual Selection** - Selected state management with image updates
+- **Search Integration** - Automatic search refresh based on view changes
+- **Progress Tracking** - Visual progress bars with percentage indicators
+- **Stage Management** - Step-by-step download progress with status updates
+
+**Download Process Management**:
+- **Progress Visualization** - Real-time progress bars and stage indicators
+- **Error Handling** - Download error display and management
+- **Queue Management** - Download queue for multiple simultaneous downloads
+- **Content Type Support** - Avatars, communities, buildings, things
+- **Cross-server Downloads** - Content sharing between WalkTheWeb servers
+
+**Download Stages**:
+- **Initial Setup** - Web settings and metadata download
+- **Asset Download** - 3D models, textures, and media files
+- **Database Integration** - Content integration into local database
+- **Completion** - Final setup and availability notification
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Download handlers for content processing
+- **Integrates with**: Content discovery for cross-server sharing
+- **Critical for**: Cross-server 3D content sharing and distribution
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
