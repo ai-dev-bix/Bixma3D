@@ -268,6 +268,162 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 375448: core/scripts/prime/wtw_common.js** (Common Utilities)
+**Purpose**: Common utility functions for both browse and admin modes, including activity management and 3D scene operations
+
+**Functions**:
+
+1. **`resetActivityTimer()`** - Activity monitoring
+   - Resets inactivity timer when avatar moves
+   - Different timeouts for mobile (5 min) vs desktop (3 hours)
+   - **Used by**: Movement and interaction systems
+
+2. **`noActivityPause()`** - Performance optimization
+   - Pauses render cycle during inactivity
+   - Automatically resumes on activity
+   - **Used by**: Activity timer for performance
+
+3. **`setShownConnectingGrids()`** - 3D scene management
+   - Manages visibility of connecting grids (3D objects in scenes)
+   - Optimizes performance by showing/hiding based on distance
+   - **Used by**: Scene loading and optimization
+
+**Cross-references**:
+- **Used by**: All movement and interaction systems
+- **Calls**: Plugin system for activity reset hooks
+- **Critical for**: Performance optimization and user experience
+
+---
+
+### **File 375100: core/scripts/prime/wtw_cameras.js** (Camera System)
+**Purpose**: Comprehensive camera management system supporting multiple camera types and VR/AR
+
+**Functions**:
+
+1. **`loadPrimaryCamera()`** - Initial camera setup
+   - Detects mobile vs desktop for optimal camera settings
+   - Chooses between follow camera and VR camera
+   - **Called by**: Scene initialization
+
+2. **`initCamera(zviewport, zcameraid, zsettings)`** - Camera creation and management
+   - Supports multiple camera types: AnaglyphCamera, VRCamera, FollowCamera, etc.
+   - Handles camera switching and viewport management
+   - Manages camera parenting and positioning
+   - **Used by**: Camera switching and VR/AR mode transitions
+
+**Camera Types Supported**:
+- **Follow Camera** - Standard third-person camera
+- **VR Cameras** - VRDeviceOrientationFreeCamera, VRGamepadCamera
+- **Specialized Cameras** - Anaglyph (3D), Arc Rotate, Universal cameras
+- **Mobile Optimization** - Automatic mobile detection and optimization
+
+**Cross-references**:
+- **Used by**: Avatar system for camera following
+- **Integrates with**: VR/AR systems and mobile optimization
+- **Critical for**: User navigation and immersive experience
+
+---
+
+### **File 381998: core/scripts/prime/wtw_input.js** (Input Handling)
+**Purpose**: Central input processing system handling mouse, touch, and interaction events
+
+**Functions**:
+
+1. **`hasInputMoved(zstartx, zstarty)`** - Movement detection
+   - Determines if mouse/touch has moved significantly
+   - Provides wiggle room for click detection
+   - **Used by**: All click and interaction systems
+
+2. **`inputDown(zevent)`** - Input press handling
+   - Processes mouse down and touch down events
+   - Handles HUD interactions and scroll boxes
+   - **Called by**: Event listeners
+
+3. **`inputUp(zevent)`** - Input release handling
+   - Processes mouse up and touch up events
+   - Stops movement, clears key presses, handles drag operations
+   - **Called by**: Event listeners
+
+4. **`inputClick(zevent)`** - Click processing
+   - Main click handler with timing validation
+   - Routes clicks to plugins and 3D object interactions
+   - Handles complex mold name parsing and parent relationships
+   - **Called by**: Event listeners
+
+**Key Features**:
+- **Multi-input Support** - Mouse, touch, and keyboard
+- **Plugin Integration** - Routes input to plugin system
+- **3D Object Interaction** - Complex object picking and interaction
+- **Performance Optimized** - Efficient event processing
+
+**Cross-references**:
+- **Extends**: Plugin system for input handling
+- **Used by**: All user interaction systems
+- **Critical for**: User interface and 3D object interaction
+
+---
+
+### **File 362059: core/scripts/hud/wtw_hud.js** (HUD System)
+**Purpose**: Heads-Up Display system providing menus, user settings, and interface elements
+
+**Functions**:
+
+1. **`openHUD()`** - HUD initialization
+   - Creates main HUD 3D object with billboard behavior
+   - Loads HUD model from babylon file
+   - Sets up complex animation system with 10+ animations
+   - **Called by**: Interface initialization
+
+**HUD Animation System**:
+- **HUDset** - Initial setup animation
+- **HUDleftopen/close** - Left panel animations
+- **HUDrightopen/close** - Right panel animations  
+- **HUDbottomopen/close** - Bottom panel animations
+- **HUDbottomleftopen/close** - Bottom left panel animations
+- **HUDlefttoright** - Panel transition animations
+
+**Key Features**:
+- **3D Interface** - HUD rendered as 3D objects in scene
+- **Billboard Mode** - Always faces camera
+- **Animation System** - Smooth panel transitions
+- **Camera Parenting** - Follows camera movement
+
+**Cross-references**:
+- **Uses**: Babylon.js SceneLoader for 3D HUD assets
+- **Integrates with**: Camera system for positioning
+- **Critical for**: User interface and menu system
+
+---
+
+### **File 386522: core/scripts/prime/wtw_objectdefinitions.js** (Object Definitions)
+**Purpose**: Defines data structures for all major 3D objects and entities in the platform
+
+**Functions**:
+
+1. **`newConnectingGrid()`** - Connecting grid object template
+   - Defines structure for placing 3D objects within other 3D objects
+   - Includes franchise info, position/rotation/scaling, load zones
+   - **Used by**: 3D scene composition and object placement
+
+2. **`newActionZone()`** - Action zone object template
+   - Defines trigger zones for animations and JavaScript functions
+   - Includes community/building/thing info, position, and trigger settings
+   - **Used by**: Interactive zone creation and management
+
+**Data Structure Categories**:
+- **Franchise Information** - Multi-server object references
+- **Spatial Data** - Position, rotation, scaling vectors
+- **Relationship Data** - Parent/child object relationships
+- **Action Triggers** - Load/unload/attach action zones
+- **Metadata** - Analytics, access control, naming
+
+**Cross-references**:
+- **Used by**: All 3D object creation functions
+- **Critical for**: Data consistency and object relationships
+- **Integrates with**: Database layer for object persistence
+
+---
+
 ### **File 223690: core/functions/class_wtwadmin.php** (Admin Interface)
 **Purpose**: Admin-specific functionality and interface management for 3D CMS administration
 
@@ -819,6 +975,114 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 - **Performance**: Efficient utility functions with proper caching
 - **Enhancement**: Could implement request rate limiting
 - **Risk**: Central dependency - failures affect entire platform
+
+---
+
+### **File 222987: core/functions/class_wtwactionzones.php** (Action Zones Management)
+**Purpose**: Database operations for interactive action zones that trigger animations and JavaScript functions
+
+**Functions**:
+
+1. **`instance()`** - Action zones singleton pattern
+   - **Used by**: All action zone operations
+
+2. **`checkActionZone($zcheckactionzoneid)`** - Action zone validation
+   - Validates if action zone ID exists in database
+   - **Returns**: Valid action zone ID or empty string
+   - **Used by**: Save operations for validation
+
+3. **`saveActionZone(...)`** - Complex action zone persistence (24+ parameters)
+   - Comprehensive action zone creation/update with full spatial data
+   - Handles teleportation, spawning, movement, rotation, and JavaScript triggers
+   - Includes access control validation
+   - **Parameters**: Position, scaling, rotation, axis data, movement settings, JavaScript functions
+   - **Used by**: Admin interface for action zone creation
+
+**Key Features**:
+- **Spatial Data** - Full 3D positioning, scaling, rotation with axis control
+- **Trigger Types** - Teleport, spawn, movement, JavaScript function execution
+- **Security** - Access control validation before save operations
+- **Complex Parameters** - 24+ parameters for comprehensive zone configuration
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for queries
+- **Uses**: Handlers class **File 246040** for validation and access control
+- **Critical for**: Interactive 3D environments and user triggers
+
+---
+
+### **File 235888: core/functions/class_wtwconnectinggrids.php** (3D Object Placement)
+**Purpose**: Manages connecting grids system for placing 3D objects within other 3D objects (buildings in communities, etc.)
+
+**Functions**:
+
+1. **`instance()`** - Connecting grids singleton pattern
+   - **Used by**: All 3D object placement operations
+
+2. **`saveConnectingGrid(...)`** - 3D object placement persistence (13+ parameters)
+   - Saves parent-child relationships between 3D objects
+   - Handles complex multi-server franchise relationships
+   - Includes spatial positioning and access control
+   - **Parameters**: Parent/child web IDs, position/scaling/rotation, load zones
+   - **Used by**: Admin interface for object placement
+
+**Key Features**:
+- **Multi-tier Architecture** - Supports communities → buildings → things hierarchy
+- **Cross-server Support** - Handles multiple franchise server relationships
+- **Spatial Control** - Full 3D positioning, scaling, rotation
+- **Load Zones** - Action zone integration for object loading triggers
+- **Access Control** - Validates admin permissions based on object type
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for queries
+- **Uses**: Handlers class **File 246040** for validation and access control
+- **Integrates with**: Action zones **File 222987** for load triggers
+- **Critical for**: 3D scene composition and object hierarchy
+
+---
+
+### **File 257332: core/functions/class_wtwuploads.php** (File Management System)
+**Purpose**: Comprehensive file upload, management, and storage system supporting both database and filesystem storage
+
+**Functions**:
+
+1. **`instance()`** - Uploads singleton pattern
+   - **Used by**: All file management operations
+
+2. **`copyFile($zfile1, $zfilepath1, $zfile2, $zfilepath2, ...)`** - File copying
+   - Copies files from temporary to final locations after upload
+   - Includes content folder validation and permission management
+   - Handles file existence checks and error reporting
+   - **Used by**: Upload completion workflow
+
+3. **`deleteFile($zfile1, $zfilepath1, ...)`** - File deletion
+   - Currently disabled for security (admins delete manually)
+   - **Note**: Intentionally limited for security reasons
+
+4. **`updateFileInDb(...)`** - Database file record management (15+ parameters)
+   - Updates file metadata in database
+   - Supports both database storage and filesystem references
+   - Handles image dimensions, file types, and user associations
+   - **Parameters**: File IDs, metadata, dimensions, storage location
+   - **Used by**: Upload completion and file processing
+
+5. **Settings Integration Functions** - Configuration management
+   - `getSetting()`, `getSettings()`, `saveSetting()`, `saveSettings()`
+   - Exposes handler settings functions to uploads class
+   - **Used by**: Upload configuration and settings management
+
+**Key Features**:
+- **Dual Storage** - Database BLOB storage or filesystem references
+- **Security** - File validation, permission management, folder verification
+- **Image Processing** - Automatic thumbnail and web-size generation
+- **Multi-format Support** - Images, 3D models, textures, documents
+- **User Association** - Links files to users and content objects
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for file records
+- **Uses**: Handlers class **File 246040** for settings and validation
+- **Integrates with**: Content folder system for organization
+- **Critical for**: 3D asset management and file storage
 
 ---
 
