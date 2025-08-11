@@ -1699,16 +1699,11 @@ WTWJS.prototype.addMoldBabylonFile = function(zmoldname, zmolddef, zlenx, zleny,
 									if (WTW.adminView == 1 || zispickable) {
 										zresults.meshes[i].isPickable = true;
 									}
-									/* ENHANCED: Ensure collision detection is enabled for uploaded models */
+									/* ENHANCED: Set collision detection for uploaded models */
+									/* Note: Physics will be applied later in this callback if enabled */
+									/* We set collision detection here as base behavior, physics will override if needed */
 									if (zcheckcollisions) {
 										zresults.meshes[i].checkCollisions = true;
-									}
-									/* Additional safety: If no physics will be applied, ensure collision detection is enabled */
-									if (zmolddef.physics == undefined || zmolddef.physics.enabled != 1 || havokInstance == null) {
-										if (zcheckcollisions) {
-											zresults.meshes[i].checkCollisions = true;
-											WTW.log('Collision detection enabled for non-physics mesh: ' + zresults.meshes[i].id);
-										}
 									}
 									/* make sure all object meshes have a parent */
 									if (zresults.meshes[i].parent == null) {
@@ -1834,8 +1829,9 @@ WTWJS.prototype.addMoldBabylonFile = function(zmoldname, zmolddef, zlenx, zleny,
 							/* if the parent has been deleted after this async process began (avoiding orphaned objects) */
 							WTW.disposeClean(zmoldname);
 						} else {
-							/* if there is no animation included, freeze world matrix */
-							if (zhasanimation == false && WTW.adminView == 0 && zparentname.indexOf('actionzone') == -1) {
+							/* if there is no animation included, freeze world matrix (but not for physics-enabled objects) */
+							var zphysicsEnabled = (zmolddef.physics != undefined && zmolddef.physics.enabled == 1 && havokInstance != null);
+							if (zhasanimation == false && WTW.adminView == 0 && zparentname.indexOf('actionzone') == -1 && !zphysicsEnabled) {
 								for (var i=0; i < zresults.meshes.length; i++) {
 									if (zresults.meshes[i] != null) {
 										zresults.meshes[i].freezeWorldMatrix();
