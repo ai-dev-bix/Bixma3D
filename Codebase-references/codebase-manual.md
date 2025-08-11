@@ -557,6 +557,99 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 282071: core/scripts/admin/wtw_admininit.js** (Admin Interface Initialization)
+**Purpose**: Administrative interface initialization and startup sequence management
+
+**Functions**:
+
+1. **`adminInit()`** - Admin mode detection and initialization
+   - Executes after scene loading completes in admin mode
+   - Presence of this function indicates admin mode loading
+   - **Called by**: Core initialization sequence **File 378502**
+
+2. **`adminLoadAfterScreen()`** - Admin startup sequence
+   - Sets window size and processes query string parameters
+   - Handles snapshot mode returns and menu state management
+   - Opens appropriate admin forms based on URL parameters
+   - **Called by**: Admin mode initialization after scene load
+
+**Admin Interface Elements**:
+- **Guide Lines** - 3D editing guide lines (lineX, lineY, lineZ variants)
+- **Mold Backup** - Backup system for reverting mold edits
+- **Menu Management** - Dynamic admin menu opening and closing
+- **Update System** - Handles platform update workflows
+- **Snapshot Integration** - Screenshot and preview image management
+
+**Key Features**:
+- **Query String Processing** - URL parameter handling for deep linking
+- **Menu State Management** - Persistent admin menu states
+- **Plugin Integration** - Hooks for admin plugin initialization
+- **Update Workflow** - Automatic update and plugin management flows
+- **Snapshot Mode** - Special handling for returning from screenshot operations
+
+**Cross-references**:
+- **Used by**: Admin interface system for initialization
+- **Calls**: Plugin system for admin-specific startup hooks
+- **Integrates with**: Admin menu system and form management
+- **Critical for**: Admin mode functionality and user experience
+
+---
+
+### **File 384823: core/scripts/prime/wtw_install.js** (Installation System)
+**Purpose**: Installation process functions and simplified WTW class for setup procedures
+
+**Functions**:
+
+1. **`WTWJS()`** - Simplified constructor for installation
+   - Creates minimal WTW instance for installation process
+   - Sets adminView to 0 (browse mode) for installation
+   - **Used by**: Installation and setup processes
+
+2. **`dGet(k)`** - Global DOM element retrieval function
+   - Simplifies document.getElementById calls outside WTW class
+   - **Used by**: Installation forms and setup interfaces
+
+3. **`WTW.dGet(k)`** - WTW class DOM element retrieval
+   - Same functionality within WTW class context
+   - **Used by**: WTW methods during installation
+
+4. **`log(txt, color)`** - Installation logging system
+   - Console logging with color support for debugging
+   - Respects dev mode settings for log output
+   - **Used by**: Installation process debugging and status
+
+5. **`getJSON(zurl, zcallback, zaction, zrequest)`** - Installation AJAX calls
+   - Performs JSON requests during installation
+   - Handles GET/POST requests with callbacks
+   - **Used by**: Installation data retrieval and validation
+
+6. **`getAsyncJSON(zurl, zcallback, zaction, zrequest)`** - Async installation requests
+   - Promise-based JSON requests for installation
+   - **Used by**: Asynchronous installation operations
+
+7. **`postJSON(zurl, zrequest, zcallback)`** - Installation form submissions
+   - Form-based POST requests using FormData
+   - **Used by**: Installation configuration submission
+
+8. **`postAsyncJSON(zurl, zrequest, zcallback)`** - Async installation posts
+   - Promise-based form submissions
+   - **Used by**: Asynchronous installation form processing
+
+**Key Features**:
+- **Minimal WTW Class** - Stripped-down version for installation only
+- **AJAX Integration** - Complete HTTP request handling for setup
+- **Debug Support** - Colored console logging for installation debugging
+- **Form Processing** - FormData-based form submission handling
+- **Promise Support** - Modern async/await compatible request handling
+
+**Cross-references**:
+- **Simplified version of**: Main WTW constructor **File 377919**
+- **Used during**: Platform installation and initial setup
+- **Replaces**: Full WTW functionality during installation process
+- **Critical for**: Platform installation, setup, and configuration
+
+---
+
 ### **File 223690: core/functions/class_wtwadmin.php** (Admin Interface)
 **Purpose**: Admin-specific functionality and interface management for 3D CMS administration
 
@@ -1467,6 +1560,72 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 - **Integrates with**: Avatar system **File 228442** for avatar management
 - **Uses**: Animation system **File 227818** for animation data
 - **Critical for**: Avatar delivery, animation control, and content safety
+
+---
+
+### **File 254614: core/functions/class_wtwthingmolds.php** (Individual Object Template System)
+**Purpose**: Database operations for 3D thing molds (individual object templates) with complete material and physics properties
+
+**Functions**:
+
+1. **`instance()`** - Thing molds singleton pattern
+   - **Used by**: All individual object template operations
+
+2. **`saveThingMold(...)`** - Thing template persistence (70+ parameters)
+   - Comprehensive individual object template creation/update system
+   - Identical parameter set to building/community molds for consistency
+   - Handles complete 3D object properties: materials, textures, physics, sound
+   - **Parameters**: Spatial data, materials, textures, physics, sound, video, CSG
+   - **Used by**: Individual object template creation and editing interface
+
+**Key Features**:
+- **Consistent Template System** - Same 70+ parameter structure across all mold types
+- **Individual Object Focus** - Optimized for smaller, individual 3D objects
+- **Complete Material System** - Full material, texture, and physics support
+- **Action Zone Integration** - Load/unload zones for performance optimization
+- **CSG Operations** - Complex object combination capabilities
+- **Multi-media Support** - Video textures, 3D audio, interactive elements
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for template storage
+- **Uses**: Handlers class **File 246040** for validation and access control
+- **Part of**: Complete mold system with building **File 230779** and community **File 234896** molds
+- **Critical for**: Individual 3D object template system and small-scale content creation
+
+---
+
+### **File 256631: core/functions/class_wtwtools.php** (Administrative Tools)
+**Purpose**: Administrative utility functions for content management and server configuration
+
+**Functions**:
+
+1. **`instance()`** - Tools singleton pattern
+   - **Used by**: All administrative tool operations
+
+2. **`saveContentRating($zwebid, $zwebtype, $zrating, $zratingvalue, $zcontentwarning, $zparentalcontrols)`** - Content rating management
+   - Manages content ratings for age-appropriate content filtering
+   - Handles parental controls and content warnings
+   - Supports create/update/delete operations for content ratings
+   - **Security**: Requires admin/developer/architect/graphics artist/host permissions
+   - **Used by**: Content moderation and parental control systems
+
+3. **`getServerSettings()`** - Server configuration retrieval
+   - Returns comprehensive server configuration settings
+   - Includes database settings, content paths, domain configuration
+   - **Used by**: Server administration and configuration management
+
+**Key Features**:
+- **Content Safety** - Comprehensive content rating and parental control system
+- **Multi-role Permissions** - Flexible permission system for different user types
+- **Server Management** - Complete server configuration access
+- **Audit Trail** - Full tracking of content rating changes
+- **Base64 Encoding** - Secure content warning storage
+
+**Cross-references**:
+- **Extends**: Database layer **File 236304** for settings storage
+- **Uses**: Handlers class **File 246040** for permission validation
+- **Integrates with**: Content rating system across all content types
+- **Critical for**: Administrative tools, content safety, and server management
 
 ---
 
