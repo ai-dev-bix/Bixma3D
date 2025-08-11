@@ -2945,6 +2945,103 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 381998: core/scripts/prime/wtw_input.js** (Advanced Input System)
+**Purpose**: Comprehensive input handling system for mouse, touch, and 3D object interactions
+
+**Functions**:
+
+1. **`hasInputMoved(zstartx, zstarty)`** - Input movement detection
+   - Determines if input has moved beyond click threshold
+   - Provides 5-pixel wiggle room for click detection
+   - **Used by**: Click detection system to distinguish clicks from drags
+
+2. **`inputDown(zevent)`** - Input press handling
+   - Processes mouse down and touch down events
+   - Handles scroll box interactions and HUD element presses
+   - **Called by**: Event listeners for input press events
+
+3. **`inputUp(zevent)`** - Input release handling
+   - Processes mouse up and touch up events
+   - Clears movement keys and cancels walk-to-position
+   - Handles drag completion for scroll boxes and HUD elements
+   - **Called by**: Event listeners for input release events
+
+4. **`inputClick(zevent)`** - Comprehensive click processing
+   - Processes mouse clicks and touch taps with timing validation
+   - Handles complex 3D object interaction hierarchy
+   - Routes clicks to appropriate handlers: HUD, images, videos, action zones
+   - **Called by**: Event listeners for click/tap events
+
+**Input Processing Features**:
+- **Movement Detection** - Distinguishes clicks from drags with threshold
+- **Timing Validation** - 350ms timing window for click detection
+- **Hierarchy Navigation** - Traverses parent objects to find action zones
+- **Plugin Integration** - Plugin hook system for custom input handling
+- **Multi-input Support** - Mouse and touch input with unified processing
+
+**Click Handling Types**:
+- **HUD Elements** - HUD button and control interactions
+- **3D Objects** - Mold clicking with event processing
+- **Images/Videos** - Media content interaction
+- **Action Zones** - Interactive zone triggering
+- **Avatar Movement** - Click-to-walk and double-click-to-run
+
+**Cross-references**:
+- **Used by**: Event system for all user input processing
+- **Integrates with**: HUD system **File 362059** for interface interactions
+- **Calls**: Plugin system for extensible input handling
+- **Critical for**: All user interaction and 3D object manipulation
+
+---
+
+### **File 375100: core/scripts/prime/wtw_cameras.js** (Camera System)
+**Purpose**: Comprehensive camera management system supporting multiple camera types and VR/AR
+
+**Functions**:
+
+1. **`loadPrimaryCamera()`** - Initial camera setup
+   - Detects mobile devices for appropriate camera selection
+   - Sets up default follow camera or VR camera based on device
+   - **Called by**: Scene initialization for camera setup
+
+2. **`initCamera(zviewport, zcameraid, zsettings)`** - Camera creation and management
+   - Creates and manages multiple camera types with proper configuration
+   - Handles camera switching and viewport management
+   - Supports 9 different camera types including VR/AR cameras
+   - **Called by**: Camera switching system and initialization
+
+**Camera Types Supported**:
+- **Follow Camera** - Standard third-person following camera
+- **Anaglyph Camera** - 3D stereoscopic viewing with red/cyan glasses
+- **VR Camera** - Virtual reality device orientation camera
+- **VR Gamepad Camera** - VR camera with gamepad controls
+- **WebVR Camera** - WebVR standard camera
+- **WebXR Camera** - Modern WebXR camera for AR/VR
+- **Fly Camera** - Airplane-style camera with banked turns
+- **Orientation Camera** - Device orientation camera for mobile
+- **Joystick Camera** - Virtual joystick camera for touch devices
+- **Arc Camera** - Orbital camera for object inspection
+
+**Camera Features**:
+- **Mobile Detection** - Automatic mobile device detection
+- **VR/AR Support** - Complete VR and AR camera integration
+- **Multi-viewport** - Support for multiple simultaneous cameras
+- **Device Integration** - Device orientation and gamepad support
+- **Performance Optimization** - Efficient camera switching and management
+
+**Advanced Camera Settings**:
+- **Fly Camera** - Roll correction, banked turns, banking limits
+- **Orientation Camera** - Angular and move sensitivity controls
+- **Arc Camera** - Alpha, beta, radius, and target position control
+- **VR Cameras** - Device orientation and WebXR integration
+
+**Cross-references**:
+- **Used by**: HUD camera controls **File 364141** for camera switching
+- **Integrates with**: Avatar system for camera following
+- **Critical for**: 3D navigation, VR/AR support, and viewing experiences
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
