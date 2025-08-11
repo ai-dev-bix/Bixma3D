@@ -29,67 +29,6 @@ class wtwdb {
 	public $pagename = '';
 	public $contentpath = '';
 	
-	/* OPTIMIZATION: Database connection pooling variables */
-	private static $connection = null;
-	private static $connectionTime = null;
-	private static $maxConnectionAge = 3600; // 1 hour max age
-	private static $queryCount = 0;
-	private static $connectionAttempts = 0;
-	private static $performanceMetrics = array(
-		'totalQueryTime' => 0,
-		'slowQueries' => array(),
-		'connectionReuses' => 0
-	);
-	
-	/* OPTIMIZATION: Database connection pooling helper method */
-	private function getConnection() {
-		$currentTime = time();
-		
-		// Validate existing connection
-		if (self::$connection === null || 
-			!self::$connection->ping() || 
-			($currentTime - self::$connectionTime) > self::$maxConnectionAge) {
-			
-			// Close existing connection if present
-			if (self::$connection !== null) {
-				self::$connection->close();
-			}
-			
-			// Create new connection with error handling
-			self::$connectionAttempts++;
-			self::$connection = new mysqli(wtw_dbserver, wtw_dbusername, base64_decode(wtw_dbpassword), wtw_dbname);
-			self::$connectionTime = $currentTime;
-			
-			if (self::$connection->connect_error) {
-				$this->serror("Database connection failed (attempt " . self::$connectionAttempts . "): " . self::$connection->connect_error);
-				self::$connection = null;
-				return null;
-			}
-			
-			// Set connection options for performance
-			self::$connection->set_charset("utf8mb4");
-			self::$connection->autocommit(TRUE);
-		} else {
-			// Connection reused
-			self::$performanceMetrics['connectionReuses']++;
-		}
-		
-		return self::$connection;
-	}
-	
-	/* OPTIMIZATION: Performance monitoring methods */
-	public function getConnectionStats() {
-		return array(
-			'queryCount' => self::$queryCount,
-			'connectionAttempts' => self::$connectionAttempts,
-			'connectionAge' => self::$connectionTime ? (time() - self::$connectionTime) : 0,
-			'isConnected' => (self::$connection !== null && self::$connection->ping()),
-			'connectionReuses' => self::$performanceMetrics['connectionReuses'],
-			'averageQueryTime' => self::$queryCount > 0 ? (self::$performanceMetrics['totalQueryTime'] / self::$queryCount) : 0,
-			'slowQueryCount' => count(self::$performanceMetrics['slowQueries'])
-		);
-	}
-
 	public function serror($zmessage) {
 		try {
 			$this->query("
@@ -121,15 +60,13 @@ class wtwdb {
 	public function query($zsql) {
 		$zdata = array();
 		$znum_rows = 0;
-		$startTime = microtime(true);
-		
 		try {
 			if ($this->hasValue($zsql)) {
-				$conn = $this->getConnection(); // OPTIMIZATION: Use connection pooling
-				if ($conn !== null) {
-					self::$queryCount++;
+				$conn = new mysqli(wtw_dbserver, wtw_dbusername, base64_decode(wtw_dbpassword), wtw_dbname);
+				if ($conn->connect_error) {
+					$this->serror("core-functons-class_wtwdb.php-query=".$conn->connect_error);
+				} else {
 					$zresults = $conn->query($zsql);
-					
 					if (is_object($zresults)) {
 						if ($zresults->num_rows > 0) {
 							while($zrow = $zresults->fetch_assoc()) {
@@ -137,31 +74,13 @@ class wtwdb {
 								$znum_rows++;
 							}
 						}
-						$zresults->free(); // OPTIMIZATION: Free result set immediately
 					}
-					
-					// OPTIMIZATION: Log slow queries for further optimization
-					$queryTime = microtime(true) - $startTime;
-					self::$performanceMetrics['totalQueryTime'] += $queryTime;
-					if ($queryTime > 0.1) { // Log queries slower than 100ms
-						if (count(self::$performanceMetrics['slowQueries']) < 100) { // Limit slow query log size
-							self::$performanceMetrics['slowQueries'][] = array(
-								'query' => substr($zsql, 0, 200),
-								'time' => $queryTime,
-								'timestamp' => date('Y-m-d H:i:s')
-							);
-						}
-						error_log("WTW Slow Query (" . number_format($queryTime, 3) . "s): " . substr($zsql, 0, 100));
-					}
-				} else {
-					$this->serror("Database connection unavailable for query: " . substr($zsql, 0, 100));
 				}
-				// OPTIMIZATION: Connection stays open for reuse (no $conn->close())
+				$conn->close();
 			}
 		} catch (Exception $e) {
-			$this->serror("core-functions-class_wtwdb.php-query=".$e->getMessage() . " SQL: " . substr($zsql, 0, 100));
+			$this->serror("core-functions-class_wtwdb.php-query=".$e->getMessage());
 		}	
-		
 		return $zdata;		
 	}
 	
@@ -2627,14 +2546,6 @@ class wtwdb {
 		}
 		return $znewlabel;
 	}	
-
-	/* OPTIMIZATION: Graceful connection cleanup */
-	public function __destruct() {
-		if (self::$connection !== null) {
-			self::$connection->close();
-			self::$connection = null;
-		}
-	}
 
 }
 
