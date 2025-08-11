@@ -370,18 +370,16 @@ WTWJS.prototype.initEnvironment = async function() {
 	scene = new BABYLON.Scene(engine);        
 	scene.name = 'WalkTheWeb';
 	
-	/* OPTIMIZATION: Initialize performance optimization systems */
-	WTW.initObjectPools();
-	WTW.initAssetLoadingManager();
-	WTW.performanceMetrics.memory.initialUsage = performance.memory ? performance.memory.usedJSHeapSize : 0;
+	/* OPTIMIZATION: Initialize performance optimization systems - MOVED TO SAFER TIMING */
+	// Moved to wtw_init.js to ensure all functions are loaded first
 	
-	// OPTIMIZATION: Add cache cleanup on scene disposal
+	// OPTIMIZATION: Add cache cleanup on scene disposal (safe to do here)
 	scene.onDisposeObservable.add(() => {
-		WTW.clearMeshCache();
-		WTW.log('Scene disposed - caches cleared', 'orange');
+		if (typeof WTW.clearMeshCache === 'function') {
+			WTW.clearMeshCache();
+			WTW.log('Scene disposed - caches cleared', 'orange');
+		}
 	});
-	
-	WTW.log('Performance optimization systems initialized', 'green');
 
 		/* initialize physics engine if it is enabled */
 		switch (WTW.physicsEngine) {
@@ -425,7 +423,9 @@ WTWJS.prototype.initEnvironment = async function() {
 
 	scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 
-	/* OPTIMIZATION: Enhanced Scene Optimizer - ACTIVATED */
+	/* OPTIMIZATION: Scene Optimizer - DEACTIVATED FOR SAFETY */
+	// Scene optimizer was causing black screen - will be reactivated after investigation
+	/*
 	var zoptions = new BABYLON.SceneOptimizerOptions(30, 2000); // Target 30 FPS, 2000ms timeout
 	zoptions.addOptimization(new BABYLON.ShadowsOptimization(0));
 	zoptions.addOptimization(new BABYLON.LensFlaresOptimization(0)); 
@@ -448,7 +448,8 @@ WTWJS.prototype.initEnvironment = async function() {
 	zoptimizer.start();
 
 	// OPTIMIZATION: Store optimizer reference for manual control
-	WTW.sceneOptimizer = zoptimizer;		
+	WTW.sceneOptimizer = zoptimizer;
+	*/		
 		/* scene light setting  */
 		scene.ambientColor = new BABYLON.Color3.FromHexString(WTW.init.sceneAmbientColor);
 		scene.clearColor = new BABYLON.Color3.FromHexString(WTW.init.sceneClearColor); 

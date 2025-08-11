@@ -126,6 +126,20 @@ class wtwdb {
 		try {
 			if ($this->hasValue($zsql)) {
 				$conn = $this->getConnection(); // OPTIMIZATION: Use connection pooling
+				
+				// EMERGENCY FALLBACK: If connection pooling fails, use direct connection
+				if ($conn === null) {
+					$conn = new mysqli(wtw_dbserver, wtw_dbusername, base64_decode(wtw_dbpassword), wtw_dbname);
+					if ($conn->connect_error) {
+						$this->serror("Emergency fallback connection failed: " . $conn->connect_error);
+						return $zdata;
+					}
+					$conn->set_charset("utf8mb4");
+					$fallbackUsed = true;
+				} else {
+					$fallbackUsed = false;
+				}
+				
 				if ($conn !== null) {
 					self::$queryCount++;
 					$zresults = $conn->query($zsql);
@@ -153,10 +167,15 @@ class wtwdb {
 						}
 						error_log("WTW Slow Query (" . number_format($queryTime, 3) . "s): " . substr($zsql, 0, 100));
 					}
+					
+					// EMERGENCY FALLBACK: Close fallback connection if used
+					if (isset($fallbackUsed) && $fallbackUsed === true) {
+						$conn->close();
+					}
 				} else {
 					$this->serror("Database connection unavailable for query: " . substr($zsql, 0, 100));
 				}
-				// OPTIMIZATION: Connection stays open for reuse (no $conn->close())
+				// OPTIMIZATION: Connection stays open for reuse (no $conn->close() for pooled connections)
 			}
 		} catch (Exception $e) {
 			$this->serror("core-functions-class_wtwdb.php-query=".$e->getMessage() . " SQL: " . substr($zsql, 0, 100));
