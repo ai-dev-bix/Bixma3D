@@ -2738,6 +2738,213 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 24600: content/plugins/wtw-3dinternet/functions/class_downloads.php** (Avatar Distribution System)
+**Purpose**: Advanced avatar distribution and animation system for multiplayer avatar sharing
+
+**Functions**:
+
+1. **`downloadUpdateUserAvatar(...)`** - Avatar download and update system
+   - Downloads complete avatar data including parts and animations
+   - Handles avatar part color customization and material properties
+   - Processes avatar animations with frame ranges, loops, and sound integration
+   - **Used by**: Multiplayer system for avatar synchronization across servers
+
+2. **Avatar Animation Processing** - Complete animation data handling
+   - Processes animation events, priorities, and frame ranges
+   - Handles sound integration with distance-based audio
+   - Manages animation loops and speed ratios
+   - **Used by**: Avatar animation system for multiplayer synchronization
+
+3. **`addDownloadQueue(zwebid, zwebtype)`** - Download queue management
+   - Manages download queues for 3D web content sharing
+   - Prevents duplicate downloads with database checking
+   - **Used by**: Content sharing system for cross-server distribution
+
+**Avatar Data Components**:
+- **Avatar Parts** - Individual avatar components with color customization
+- **Animations** - Complete animation definitions with sound integration
+- **User Data** - Avatar ownership and user associations
+- **File Management** - Avatar asset organization and folder structure
+
+**Key Features**:
+- **Cross-server Avatar Sharing** - Complete avatar distribution system
+- **Animation Synchronization** - Full animation data with sound integration
+- **Color Customization** - Avatar part color and material customization
+- **Download Queue Management** - Efficient content distribution queuing
+- **User Account Integration** - Avatar ownership and permission management
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Integrates with**: Avatar system **File 228442** for avatar management
+- **Critical for**: Multiplayer avatar sharing and cross-server collaboration
+
+---
+
+### **File 26644: content/plugins/wtw-3dinternet/scripts/admin.js** (Multiplayer Admin Interface)
+**Purpose**: Socket.io-based admin interface for multiplayer server management and real-time communication
+
+**Functions**:
+
+1. **`initAdminSocket()`** - Admin socket connection initialization
+   - Establishes Socket.io connection for admin communication
+   - Sets up comprehensive event listeners for server management
+   - Handles reconnection and disconnection events
+   - **Called by**: Admin system for multiplayer server management
+
+2. **Socket Event Handlers** - Comprehensive admin event processing
+   - **Connection Events**: Connect, reconnect, disconnect handling
+   - **Scene Commands**: Real-time scene command processing
+   - **Broadcasts**: Server-wide message broadcasting
+   - **Error Handling**: Comprehensive error logging with color coding
+
+3. **`beforeUnloadAdmin()`** - Admin cleanup on page unload
+   - Properly disconnects admin socket connections
+   - Ensures clean server disconnection
+   - **Called by**: Page unload events for proper cleanup
+
+**Admin Socket Channels**:
+- **Admin Channel** - Administrative commands and server management
+- **Scene Commands** - Real-time 3D scene manipulation commands
+- **Broadcasts** - Server-wide announcements and messages
+- **Error Channel** - Error reporting and debugging information
+
+**Key Features**:
+- **Real-time Admin** - Live server administration with Socket.io
+- **Master Control** - Admin master control for scene commands and broadcasts
+- **Error Management** - Color-coded error logging for different channels
+- **Connection Management** - Robust connection handling with reconnection
+- **Server Communication** - Direct server-to-server admin communication
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Socket.io for real-time communication
+- **Critical for**: Multiplayer server administration and real-time management
+
+---
+
+### **File 27255: content/plugins/wtw-3dinternet/scripts/chat.js** (Multiplayer Chat System)
+**Purpose**: Socket.io-based real-time chat system for multiplayer communication
+
+**Functions**:
+
+1. **`initChatSocket()`** - Chat socket connection initialization
+   - Establishes Socket.io connection for chat communication
+   - Sets up comprehensive chat event listeners
+   - Handles reconnection and load zone restoration
+   - **Called by**: Multiplayer system for chat functionality
+
+2. **Chat Event Handlers** - Real-time chat processing
+   - **Chat Invites** - Handles incoming chat requests with blocking/banning checks
+   - **Message Receiving** - Processes incoming chat messages with display name resolution
+   - **Chat Commands** - Processes special chat commands and typing indicators
+   - **Group Chat** - Handles group chat messages with timestamp management
+
+**Chat Features**:
+- **Private Chat** - One-on-one chat invitations and conversations
+- **Group Chat** - Multi-user chat rooms with timestamp tracking
+- **Chat Commands** - Special command processing for enhanced functionality
+- **Typing Indicators** - Real-time typing status for better UX
+- **Blocking/Banning** - User blocking and banning integration
+
+**Key Features**:
+- **Real-time Communication** - Live chat with Socket.io
+- **User Safety** - Integrated blocking and banning system
+- **Chat Persistence** - Chat history and message management
+- **Visual Interface** - HTML-based chat interface with scrolling
+- **Connection Recovery** - Automatic reconnection with load zone restoration
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Socket.io for real-time communication
+- **Integrates with**: Blocking/banning system for user safety
+- **Critical for**: Multiplayer communication and social interaction
+
+---
+
+### **File 379455: core/scripts/prime/wtw_core.js** (Environmental Loading System)
+**Purpose**: Advanced environmental system loading with water, sky, and shadow management
+
+**Functions**:
+
+1. **Environmental Water System** - Dynamic water creation and configuration
+   - Loads water based on ground position (below 0 creates water plane)
+   - Configures water materials with bump textures, waves, and wind
+   - Handles water color blending for refraction and reflection effects
+   - **Called by**: Community loading system for environmental setup
+
+2. **Shadow System Initialization** - Dynamic shadow configuration
+   - Sets shadow quality based on GPU capabilities
+   - Configures shadow settings with performance optimization
+   - **Called by**: Scene initialization for lighting and shadows
+
+3. **Connecting Grid Loading** - 3D content hierarchy management
+   - Initiates loading of all 3D objects within a scene
+   - **Called by**: Scene initialization after environmental setup
+
+**Environmental Features**:
+- **Dynamic Water** - Procedural water with realistic wave simulation
+- **Water Materials** - Bump textures, wave height, wind effects
+- **Color Blending** - Separate refraction and reflection color controls
+- **Shadow Quality** - GPU-based shadow quality adjustment
+- **Sky Positioning** - Dynamic sky positioning relative to avatar
+
+**Water Parameters**:
+- **Wave Properties** - Height, length, and wind direction control
+- **Color Systems** - Dual color blending for realistic water appearance
+- **Material Properties** - Bump height, alpha, and culling configuration
+- **Render Integration** - Proper rendering order with sky and ground
+
+**Cross-references**:
+- **Uses**: Environmental system **File 376776** for sky management
+- **Integrates with**: Lighting and shadow systems
+- **Called by**: Community loading for environmental setup
+- **Critical for**: Immersive environmental experiences
+
+---
+
+### **File 380155: core/scripts/prime/wtw_core.js** (Content Unloading & Render System)
+**Purpose**: Advanced 3D content unloading system and render loop management
+
+**Functions**:
+
+1. **`loadAutomations(zaddautomations)`** - Automation system loading
+   - Loads automated sequences of scripted events
+   - Manages automation steps and timer-based execution
+   - **Used by**: Scene loading for automated content behaviors
+
+2. **`unloadMoldsByWebID(zactionzoneind)`** - Comprehensive content unloading
+   - Unloads all 3D content associated with a specific web object
+   - Handles communities, buildings, and things hierarchically
+   - Properly disposes sounds, lights, and animations before removal
+   - **Called by**: Action zone system when exiting load zones
+
+3. **`startRender()`** - Main render loop management
+   - Manages Babylon.js render loop with plugin integration
+   - Handles FPS tracking and performance monitoring
+   - Includes compass rose animation and avatar-based positioning
+   - **Called by**: Engine initialization for scene rendering
+
+**Content Unloading Process**:
+- **Sound Disposal** - Proper audio cleanup before object removal
+- **Light Disposal** - Lighting cleanup for performance
+- **Mold Queuing** - Queued disposal system for performance optimization
+- **Animation Cleanup** - Timer clearing and animation state cleanup
+- **Hierarchical Unloading** - Unloads all related content systematically
+
+**Render Loop Features**:
+- **Plugin Integration** - Hook system for plugin render loop code
+- **FPS Monitoring** - Real-time performance tracking
+- **Vehicle System** - Integrated vehicle movement processing
+- **Compass Animation** - Dynamic compass rose rotation based on avatar
+- **Performance Optimization** - Efficient render loop management
+
+**Cross-references**:
+- **Uses**: Action zone system **File 265765** for content management
+- **Integrates with**: Plugin system for render loop extensions
+- **Critical for**: 3D content lifecycle management and rendering performance
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
