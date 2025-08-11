@@ -3042,6 +3042,96 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 362059: core/scripts/hud/wtw_hud.js** (Main HUD System)
+**Purpose**: Core heads-up display system with animated 3D interface panels and comprehensive animation control
+
+**Functions**:
+
+1. **`openHUD()`** - HUD initialization and creation
+   - Creates main HUD interface from Babylon.js 3D model
+   - Sets up billboard mode for camera-facing interface
+   - Loads HUD model with comprehensive animation definitions
+   - **Called by**: Interface system for HUD display
+
+2. **HUD Animation System** - Comprehensive 3D interface animations
+   - **10 Animation Types**: Set, Left Open/Close, Right Open/Close, Bottom Open/Close, Bottom Left Open/Close, Left-to-Right
+   - Frame-based animation control with precise timing
+   - Non-looping animations for interface state transitions
+   - **Used by**: HUD interaction system for smooth interface transitions
+
+**HUD Animation Definitions**:
+- **HUDset** - Initial HUD setup animation (Frame 0)
+- **HUDleftopen/close** - Left panel animations (Frames 0-30, 30-60)
+- **HUDrightopen/close** - Right panel animations (Frames 60-90, 90-120)
+- **HUDbottomopen/close** - Bottom panel animations (Frames 120-150, 150-180)
+- **HUDbottomleftopen/close** - Bottom left panel (Frames 210-240, 240-270)
+- **HUDlefttoright** - Cross-panel animation (Frames 30-90)
+
+**Key Features**:
+- **3D Interface** - Full 3D animated interface system
+- **Billboard Mode** - Camera-facing interface for optimal viewing
+- **Animation Control** - Precise frame-based animation system
+- **Panel Management** - Multiple interface panels with independent control
+- **Performance Optimization** - Efficient 3D interface rendering
+
+**Interface Architecture**:
+- **Transform Node** - Hierarchical 3D interface structure
+- **Camera Attachment** - Interface follows camera for consistent positioning
+- **Animation Integration** - Complete animation system for interface feedback
+- **Model-based Interface** - 3D model-driven interface design
+
+**Cross-references**:
+- **Used by**: All HUD control files for interface creation
+- **Integrates with**: Animation system **File 227818** for interface animations
+- **Critical for**: 3D user interface and immersive interaction experience
+
+---
+
+### **File 27644: content/plugins/wtw-3dinternet/scripts/chat.js** (Chat Interface Management)
+**Purpose**: HTML-based chat interface management with real-time messaging functionality
+
+**Functions**:
+
+1. **`addChatBox(zchatid, zdisplayname, ztext)`** - Chat interface creation
+   - Creates complete HTML chat interface with minimize/maximize controls
+   - Includes chat text area, send button, and accept/decline options
+   - **Used by**: Chat system for creating chat windows
+
+2. **`acceptChat(zchatid, zdisplayname, zresponse)`** - Chat acceptance handling
+   - Processes chat invitation acceptance with UI updates
+   - Shows chat input controls and logs entry timestamp
+   - **Called by**: Chat interface when user accepts chat invitation
+
+3. **`sendChat(zchatid)`** - Chat message sending
+   - Processes and sends chat messages with encoding
+   - Updates chat interface with sent message display
+   - **Called by**: Chat interface send button
+
+4. **`closeChat(zchatid, zresponse, zdecline)`** - Chat closure management
+   - Handles chat window closing and chat declination
+   - Sends appropriate socket messages for chat state changes
+   - **Called by**: Chat interface close and decline buttons
+
+**Chat Interface Features**:
+- **HTML Integration** - Complete HTML-based chat interface
+- **Minimize/Maximize** - Chat window state management
+- **Real-time Messaging** - Live message sending and receiving
+- **Visual Feedback** - Color-coded message types and status
+- **Scroll Management** - Automatic chat scrolling for new messages
+
+**Chat Message Types**:
+- **Personal Messages** - Direct user-to-user messaging
+- **System Messages** - Entry/exit notifications with timestamps
+- **Chat Commands** - Special command processing
+- **Status Messages** - Accept, decline, leave notifications
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Uses**: Socket.io chat system **File 27255** for real-time communication
+- **Critical for**: Multiplayer communication and social interaction
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
