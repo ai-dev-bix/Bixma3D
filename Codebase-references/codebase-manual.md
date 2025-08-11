@@ -3720,6 +3720,100 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 17055: content/plugins/wtw-3dinternet/connect/wtw-3dinternet-updateavatar.php** (Avatar Update API)
+**Purpose**: RESTful API endpoint for real-time avatar position and state updates in multiplayer environments
+
+**Functions**:
+
+1. **Avatar Data Validation** - Comprehensive input validation
+   - Validates position, scaling, rotation parameters with numeric checks
+   - Handles animation parameters and privacy settings
+   - **Used by**: Multiplayer system for secure avatar updates
+
+2. **Avatar Resolution Logic** - Multi-tier avatar identification
+   - Anonymous avatar lookup by instance ID
+   - User avatar lookup by user ID and avatar ID
+   - Fallback logic for avatar identification
+   - **Used by**: Multiplayer system for avatar state management
+
+3. **Avatar State Update** - Real-time avatar data processing
+   - Updates avatar position, rotation, scaling in real-time
+   - Handles display name, privacy, and animation parameters
+   - Manages walk/turn speeds and animation speeds
+   - **Used by**: Multiplayer movement synchronization
+
+**Avatar Update Parameters**:
+- **Position Data** - X, Y, Z coordinates for avatar placement
+- **Rotation Data** - X, Y, Z rotation for avatar orientation
+- **Scaling Data** - X, Y, Z scaling for avatar size
+- **Animation Data** - Enter/exit animations with parameters
+- **Movement Data** - Walk speed, turn speed, animation speeds
+- **Privacy Data** - Privacy settings and display preferences
+
+**Security Features**:
+- **Input Validation** - Comprehensive numeric validation for all parameters
+- **User Authentication** - User token validation and instance verification
+- **Parameter Sanitization** - Safe handling of all input parameters
+- **Anonymous Support** - Secure anonymous avatar handling
+
+**Cross-references**:
+- **Part of**: 3D Internet plugin **File 28277** for multiplayer functionality
+- **Used by**: Movement system **File 32855** for avatar synchronization
+- **Critical for**: Real-time multiplayer avatar updates and synchronization
+
+---
+
+### **File 384955: core/scripts/prime/wtw_install.js** (Core Utility Functions)
+**Purpose**: Essential utility functions for text processing, DOM manipulation, and data handling
+
+**Functions**:
+
+1. **`encode(zvalue)`** - Text encoding for security
+   - Encodes HTML special characters for safe display
+   - Handles quotes, brackets, and other potentially dangerous characters
+   - **Used by**: All text output for XSS prevention
+
+2. **`decode(zvalue)`** - Text decoding for processing
+   - Decodes HTML entities back to original characters
+   - Handles escape sequences and backslashes
+   - **Used by**: Text processing and data retrieval
+
+3. **`show(zelement)` / `showInline(zelement)` / `hide(zelement)`** - DOM visibility control
+   - Controls element visibility with proper display and visibility properties
+   - Handles admin menu state management
+   - **Used by**: All interface manipulation throughout platform
+
+4. **`toggle(item)`** - Element toggle functionality
+   - Toggles element visibility between show and hide states
+   - **Used by**: Interface controls for show/hide functionality
+
+5. **`cleanInvalidCharacters(zvalue)`** - String sanitization
+   - Removes invalid JSON characters and control characters
+   - Handles line breaks, tabs, and non-printable characters
+   - **Used by**: Data processing for safe JSON handling
+
+6. **`getRandomString(zlength)`** - Random string generation
+   - Generates random alphanumeric strings for ID fields
+   - **Used by**: ID generation throughout platform
+
+**Text Processing Features**:
+- **Security Encoding** - XSS prevention with HTML entity encoding
+- **Character Sanitization** - Invalid character removal for JSON safety
+- **Escape Sequence Handling** - Proper handling of escape characters
+- **Random ID Generation** - Secure random string generation
+
+**DOM Manipulation Features**:
+- **Visibility Control** - Show, hide, inline display management
+- **Admin Integration** - Admin menu state tracking
+- **Toggle Functionality** - Element state toggling
+
+**Cross-references**:
+- **Used by**: All WTW JavaScript files for utility functions
+- **Part of**: Installation system **File 384823** for setup utilities
+- **Critical for**: Text security, DOM manipulation, and data processing
+
+---
+
 ### **File 364141: core/scripts/hud/wtw_hud_cameras.js** (HUD Camera Controls)
 **Purpose**: HUD interface functions for camera management and 3D viewing controls
 
