@@ -632,6 +632,196 @@ This manual provides a **function-level analysis** of every file in the WalkTheW
 
 ---
 
+### **File 233024: core/functions/class_wtwcommunities.php** (3D Communities Management)
+**Purpose**: Management system for 3D communities (large-scale environments containing multiple buildings)
+
+**Functions**:
+
+1. **`instance()`** - Communities singleton pattern
+   - **Used by**: All community-related operations
+
+2. **`getCommunityName($zcommunityid)`** - Community name retrieval
+   - **Used by**: UI components displaying community information
+
+3. **`communityExist($zcommunityid)`** - Community validation
+   - **Used by**: Access control and validation functions
+
+4. **`saveCommunity($zcommunityid, $zpastcommunityid, ...)`** - Community persistence
+   - Creates/updates communities with extensive environmental settings
+   - Handles water physics (position, waves, colors, alpha)
+   - Manages wind effects (force, direction)
+   - Sets lighting and fog parameters
+   - **Used by**: Admin interface for community management
+
+5. **`deleteCommunity($zcommunityid)`** - Community soft deletion
+   - Cascades deletion to all related entities
+   - **Used by**: Admin interface for community removal
+
+6. **`copyCommunity($zcommunityid, $zfromcommunityid)`** - Community duplication
+   - Similar complexity to building copying but for communities
+   - **Used by**: Template imports and community copying
+
+**Cross-references**:
+- **Similar to**: **File 231192** (buildings) but for community-level operations
+- **Manages**: Communities table and environmental settings
+- **Critical for**: Large-scale 3D environment creation
+
+**Critical Notes**:
+- **Architecture**: Parallel to buildings class with environmental focus
+- **Performance**: Heavy operations similar to buildings
+- **Enhancement**: Environmental settings could be modularized
+- **Security**: Same SQL injection risks as buildings class
+
+---
+
+### **File 255027: core/functions/class_wtwthings.php** (3D Objects Management)
+**Purpose**: Management system for individual 3D objects (things) that can be placed within buildings or communities
+
+**Functions**:
+
+1. **`instance()`** - Things singleton pattern
+   - **Used by**: All thing-related operations
+
+2. **`getThingName($zthingid)`** - Thing name retrieval
+   - **Used by**: UI components displaying thing information
+
+3. **`thingExist($zthingid)`** - Thing validation
+   - **Used by**: Access control and validation functions
+
+4. **`saveThing($zthingid, $zpastthingid, ...)`** - Thing persistence
+   - Creates/updates individual 3D objects
+   - Handles thing copying from templates
+   - **Used by**: Admin interface for thing management
+
+5. **`deleteThing($zthingid)`** - Thing soft deletion
+   - **Used by**: Admin interface for thing removal
+
+6. **`copyThing($zthingid, $zfromthingid)`** - Thing duplication
+   - Copies thing with all associated content
+   - **Used by**: Template imports and thing copying
+
+**Cross-references**:
+- **Pattern matches**: **File 231192** (buildings) and **File 233024** (communities)
+- **Manages**: Things table and 3D object lifecycle
+- **Critical for**: Individual 3D object management
+
+**Critical Notes**:
+- **Architecture**: Consistent with buildings/communities pattern
+- **Performance**: Lighter operations than buildings/communities
+- **Security**: Same pattern vulnerabilities as other content classes
+
+---
+
+### **File 260314: core/functions/class_wtwusers.php** (User Management)
+**Purpose**: Comprehensive user authentication, session management, and user lifecycle operations
+
+**Functions**:
+
+1. **`instance()`** - Users singleton pattern
+   - **Used by**: All user-related operations
+
+2. **`firstAdminUser($zdisplayname, $zpassword, $zemail)`** - Installation user creation
+   - Creates initial admin user during platform installation
+   - Uses PHP password_hash for secure password storage
+   - Sets up user session and global references
+   - **Used by**: Installation process only
+
+3. **`loginAttempt($zemail, $zpassword)`** - Local authentication
+   - Validates user credentials against local database
+   - Uses password_verify for secure password checking
+   - Sets up user session on successful login
+   - **Used by**: Local login functionality
+
+4. **`globalLogin($zglobaluserid, $zemail, $zusertoken, $zdisplayname)`** - Global authentication
+   - Handles login from external authentication systems
+   - Manages global user tokens and cross-platform authentication
+   - **Used by**: External authentication integrations
+
+5. **Additional User Functions** (continuing pattern):
+   - User creation, updating, deletion
+   - Password reset functionality
+   - User profile management
+   - Permission and role management
+
+**Cross-references**:
+- **Uses**: **File 236304** (wtwdb) for database operations
+- **Manages**: User authentication and session state
+- **Critical for**: Platform security and user management
+
+**Critical Notes**:
+- **Security**: Good password hashing practices with PHP password_hash
+- **Architecture**: Supports both local and global authentication
+- **Performance**: Session management is efficient
+- **Enhancement**: Could implement 2FA and advanced security features
+- **Risk**: Global authentication needs careful token validation
+
+---
+
+### **File 246040: core/functions/class_wtwhandlers.php** (Request Processing Layer)
+**Purpose**: Central request processing and utility functions supporting all API endpoints and handlers
+
+**Functions**:
+
+1. **`instance()`** - Handlers singleton pattern
+   - **Used by**: All handler operations
+
+2. **`__construct()`** - Handlers initialization
+   - Sets root path and loads core dependencies
+   - Requires configuration, database, and user classes
+   - **Called by**: Function 1 (instance method)
+
+3. **`getClientIP()`** - IP address detection
+   - Handles load balancer scenarios with X-Forwarded-For headers
+   - **Used by**: Analytics and security functions
+
+4. **`initClass()`** - Request context initialization
+   - Detects HTTPS and sets protocol variables
+   - Initializes domain, server IP, and user session data
+   - Sets up error handling and shutdown functions
+   - **Called by**: Request processing initialization
+
+5. **User Authentication Functions**:
+   - `getSessionUserID()` - Session user retrieval
+   - `isUserInRole($zrole)` - Role-based access control
+   - `getUserRoles($zuserid)` - User role enumeration
+   - `hasPermission($zaccessrequired)` - Permission checking
+
+6. **Access Control Functions**:
+   - `checkUpdateAccess($zcommunityid, $zbuildingid, $zthingid)` - Update permission validation
+   - `checkAdminAccess($zcommunityid, $zbuildingid, $zthingid)` - Admin permission validation
+
+7. **Data Validation Functions** (20+ utility functions):
+   - `hasValue(&$zvalue)` - Null/empty checking
+   - `checkIDFormat($zid)` - ID format validation
+   - `checkNumber($zval, $zdefaultval)` - Numeric validation
+   - `checkAlphaNumeric($zid)` - Alphanumeric validation
+   - `checkDisplayName($zid, $zdefault)` - Display name validation
+   - `escapeHTML($ztext)` - XSS prevention
+
+8. **File System Functions**:
+   - `dirSize($zdirectory)` - Directory size calculation
+   - `getFileCount($zdirectory)` - File counting
+   - `getFileList($zdirectory)` - Directory listing
+
+9. **Content Processing Functions**:
+   - `getobjectanimations($zuploadobjectid)` - Animation data retrieval
+   - `getwebimages($zthingmoldid, ...)` - Image data processing
+   - `getmoldpoints($zthingmoldid, ...)` - 3D point data retrieval
+
+**Cross-references**:
+- **Used by**: All connect API files and core classes
+- **Extends**: **File 236304** (wtwdb) functionality
+- **Critical for**: Request processing, validation, and security
+
+**Critical Notes**:
+- **Architecture**: Excellent central utility layer with comprehensive validation
+- **Security**: Good input validation and XSS prevention
+- **Performance**: Efficient utility functions with proper caching
+- **Enhancement**: Could implement request rate limiting
+- **Risk**: Central dependency - failures affect entire platform
+
+---
+
 ### **File 377919: core/scripts/prime/wtw_constructor.js** (Main JavaScript Class)
 **Purpose**: Defines the main WTWJS JavaScript class with all global variables and initialization
 
