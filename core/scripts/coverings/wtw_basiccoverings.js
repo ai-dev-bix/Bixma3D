@@ -350,45 +350,30 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 			opacity: zmolddef && zmolddef.opacity ? Number(zmolddef.opacity) / 100 : 1.0
 		};
 		
-		// Try to get material from pool first
-		zcovering = WTW.getMaterialFromPool(zmaterialDef);
+		// EMERGENCY FIX: Disable material pooling temporarily to restore functionality
+		// The pooling logic was causing materials to not be created properly
+		zcovering = new BABYLON.StandardMaterial('mat' + zmoldname, scene);
+		zcovering.diffuseColor = new BABYLON.Color3.FromHexString(zdiffusecolor);
+		zcovering.emissiveColor = new BABYLON.Color3.FromHexString(zemissivecolor);
+		zcovering.specularColor = new BABYLON.Color3.FromHexString(zspecularcolor);
+		zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
 		
-		// If we got a pooled material, we need to apply the texture properties manually
-		// since pooled materials only store the basic properties
-		if (!zcovering) {
-			// Fallback to creating new material
-			zcovering = new BABYLON.StandardMaterial('mat' + zmoldname, scene);
-			zcovering.diffuseColor = new BABYLON.Color3.FromHexString(zdiffusecolor);
-			zcovering.emissiveColor = new BABYLON.Color3.FromHexString(zemissivecolor);
-			zcovering.specularColor = new BABYLON.Color3.FromHexString(zspecularcolor);
-			zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
-		}
+		/* TODO: Fix material pooling logic - the original logic was backwards:
+		 * - getMaterialFromPool() was being called but the returned material wasn't being used correctly
+		 * - Need to properly handle pooled materials vs new materials
+		 * - For now, reverting to original material creation to restore functionality
+		 */
 
-		/* PHASE 2.2: TEXTURE OPTIMIZATION INTEGRATION - Use texture pooling for all textures */
+		/* EMERGENCY FIX: Disable texture pooling temporarily to restore functionality */
 		var zimageextension = '';
 		if (ztexturepath == '') {
 			var zimageinfo = WTW.getUploadFileData(zimageid);
 			zimageextension = zimageinfo.extension;
-			// Use texture pooling for base64 textures
-			var ztextureUrl = 'base64_' + zimageid + '_' + zimageinfo.image.src.substring(0, 50);
-			zcovering.diffuseTexture = WTW.getTextureFromPool(ztextureUrl, scene);
-			if (!zcovering.diffuseTexture) {
-				// Fallback to original creation method
-				zcovering.diffuseTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfo.image.src, 'mattexture' + zimageid, scene);
-			}
+			zcovering.diffuseTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfo.image.src, 'mattexture' + zimageid, scene);
 		} else {
-			// Use texture pooling for file-based textures
-			zcovering.diffuseTexture = WTW.getTextureFromPool(ztexturepath, scene);
-			if (!zcovering.diffuseTexture) {
-				// Fallback to original creation method
-				zcovering.diffuseTexture = new BABYLON.Texture(ztexturepath, scene);
-			}
-			
+			zcovering.diffuseTexture = new BABYLON.Texture(ztexturepath, scene);
 			if (zmoldname.indexOf('-mainimage') > -1) {
-				zcovering.emissiveTexture = WTW.getTextureFromPool(ztexturepath, scene);
-				if (!zcovering.emissiveTexture) {
-					zcovering.emissiveTexture = new BABYLON.Texture(ztexturepath, scene);
-				}
+				zcovering.emissiveTexture = new BABYLON.Texture(ztexturepath, scene);
 			}
 			zimageextension = ztexturepath.substr(ztexturepath.length - 3).toLowerCase();
 		}
@@ -401,19 +386,10 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 		}	
 		if (zbumpid != '' || zbumppath != '') {
 			if (zbumppath != '') {
-				// Use texture pooling for bump texture files
-				zcovering.bumpTexture = WTW.getTextureFromPool(zbumppath, scene);
-				if (!zcovering.bumpTexture) {
-					zcovering.bumpTexture = new BABYLON.Texture(zbumppath, scene);
-				}
+				zcovering.bumpTexture = new BABYLON.Texture(zbumppath, scene);
 			} else {
 				var zimageinfobump = WTW.getUploadFileData(zbumpid);
-				// Use texture pooling for base64 bump textures
-				var zbumpTextureUrl = 'base64_bump_' + zbumpid + '_' + zimageinfobump.image.src.substring(0, 50);
-				zcovering.bumpTexture = WTW.getTextureFromPool(zbumpTextureUrl, scene);
-				if (!zcovering.bumpTexture) {
-					zcovering.bumpTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfobump.image.src, 'mattexture' + zbumpid, scene);
-				}
+				zcovering.bumpTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfobump.image.src, 'mattexture' + zbumpid, scene);
 			}
 			zcovering.bumpTexture.uScale = zuscale;
 			zcovering.bumpTexture.vScale = zvscale;
