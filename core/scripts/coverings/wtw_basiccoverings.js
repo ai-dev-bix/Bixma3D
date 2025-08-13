@@ -364,15 +364,31 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 			zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
 		}
 
+		/* PHASE 2.2: TEXTURE OPTIMIZATION INTEGRATION - Use texture pooling for all textures */
 		var zimageextension = '';
 		if (ztexturepath == '') {
 			var zimageinfo = WTW.getUploadFileData(zimageid);
 			zimageextension = zimageinfo.extension;
-			zcovering.diffuseTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfo.image.src, 'mattexture' + zimageid, scene);
+			// Use texture pooling for base64 textures
+			var ztextureUrl = 'base64_' + zimageid + '_' + zimageinfo.image.src.substring(0, 50);
+			zcovering.diffuseTexture = WTW.getTextureFromPool(ztextureUrl, scene);
+			if (!zcovering.diffuseTexture) {
+				// Fallback to original creation method
+				zcovering.diffuseTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfo.image.src, 'mattexture' + zimageid, scene);
+			}
 		} else {
-			zcovering.diffuseTexture = new BABYLON.Texture(ztexturepath, scene);
+			// Use texture pooling for file-based textures
+			zcovering.diffuseTexture = WTW.getTextureFromPool(ztexturepath, scene);
+			if (!zcovering.diffuseTexture) {
+				// Fallback to original creation method
+				zcovering.diffuseTexture = new BABYLON.Texture(ztexturepath, scene);
+			}
+			
 			if (zmoldname.indexOf('-mainimage') > -1) {
-				zcovering.emissiveTexture = new BABYLON.Texture(ztexturepath, scene);
+				zcovering.emissiveTexture = WTW.getTextureFromPool(ztexturepath, scene);
+				if (!zcovering.emissiveTexture) {
+					zcovering.emissiveTexture = new BABYLON.Texture(ztexturepath, scene);
+				}
 			}
 			zimageextension = ztexturepath.substr(ztexturepath.length - 3).toLowerCase();
 		}
@@ -385,10 +401,19 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 		}	
 		if (zbumpid != '' || zbumppath != '') {
 			if (zbumppath != '') {
-				zcovering.bumpTexture = new BABYLON.Texture(zbumppath, scene);
+				// Use texture pooling for bump texture files
+				zcovering.bumpTexture = WTW.getTextureFromPool(zbumppath, scene);
+				if (!zcovering.bumpTexture) {
+					zcovering.bumpTexture = new BABYLON.Texture(zbumppath, scene);
+				}
 			} else {
 				var zimageinfobump = WTW.getUploadFileData(zbumpid);
-				zcovering.bumpTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfobump.image.src, 'mattexture' + zbumpid, scene);
+				// Use texture pooling for base64 bump textures
+				var zbumpTextureUrl = 'base64_bump_' + zbumpid + '_' + zimageinfobump.image.src.substring(0, 50);
+				zcovering.bumpTexture = WTW.getTextureFromPool(zbumpTextureUrl, scene);
+				if (!zcovering.bumpTexture) {
+					zcovering.bumpTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfobump.image.src, 'mattexture' + zbumpid, scene);
+				}
 			}
 			zcovering.bumpTexture.uScale = zuscale;
 			zcovering.bumpTexture.vScale = zvscale;

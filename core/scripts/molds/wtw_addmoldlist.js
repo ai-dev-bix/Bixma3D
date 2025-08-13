@@ -622,6 +622,12 @@ WTWJS.prototype.completeMold = function(zmold, zmoldname, zparentname, zmolddef,
 			//	zmold.convertToUnIndexedMesh();
 			//}
 			
+			/* PHASE 2.3: LOD SYSTEM INTEGRATION - Setup Level of Detail for performance */
+			if (zmold && !zmold.metadata.isInstance && WTW.adminView == 0) {
+				// Only apply LOD to non-instance meshes in browse mode
+				WTW.setupLOD(zmold);
+			}
+			
 			/* cleanup - remove any un-parented molds (sometimes the parent was deleted since the mold started to be created) */
 			if (zparentname != '') {
 				var zparentmold = WTW.getMeshOrNodeByID(zparentname);
