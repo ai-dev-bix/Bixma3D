@@ -337,12 +337,32 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 				}
 			}
 		}
-		WTW.disposeMaterial('mat' + zmoldname);		
-		zcovering = new BABYLON.StandardMaterial('mat' + zmoldname, scene);
-		zcovering.diffuseColor = new BABYLON.Color3.FromHexString(zdiffusecolor);
-		zcovering.emissiveColor = new BABYLON.Color3.FromHexString(zemissivecolor);
-		zcovering.specularColor = new BABYLON.Color3.FromHexString(zspecularcolor);
-		zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
+		WTW.disposeMaterial('mat' + zmoldname);
+		
+		/* PHASE 1.1: MATERIAL POOLING INTEGRATION - Extract material definition for pooling */
+		var zmaterialDef = {
+			diffuseColor: zdiffusecolor,
+			emissiveColor: zemissivecolor,
+			specularColor: zspecularcolor,
+			ambientColor: zambientcolor,
+			diffuseTexture: (ztexturepath !== '' ? ztexturepath : (zimageid !== '' ? 'base64_' + zimageid : 'none')),
+			bumpTexture: (zbumppath !== '' ? zbumppath : (zbumpid !== '' ? 'base64_' + zbumpid : 'none')),
+			opacity: zmolddef && zmolddef.opacity ? Number(zmolddef.opacity) / 100 : 1.0
+		};
+		
+		// Try to get material from pool first
+		zcovering = WTW.getMaterialFromPool(zmaterialDef);
+		
+		// If we got a pooled material, we need to apply the texture properties manually
+		// since pooled materials only store the basic properties
+		if (!zcovering) {
+			// Fallback to creating new material
+			zcovering = new BABYLON.StandardMaterial('mat' + zmoldname, scene);
+			zcovering.diffuseColor = new BABYLON.Color3.FromHexString(zdiffusecolor);
+			zcovering.emissiveColor = new BABYLON.Color3.FromHexString(zemissivecolor);
+			zcovering.specularColor = new BABYLON.Color3.FromHexString(zspecularcolor);
+			zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
+		}
 
 		var zimageextension = '';
 		if (ztexturepath == '') {

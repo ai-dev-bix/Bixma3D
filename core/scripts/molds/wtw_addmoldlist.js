@@ -205,16 +205,32 @@ WTWJS.prototype.addMold = function(zmoldname, zmolddef, zparentname, zcoveringna
 		zposx = ztransformposition.posx;
 		zposy = ztransformposition.posy;
 		zposz = ztransformposition.posz;
+		/* PHASE 1.2: GEOMETRY INSTANCING INTEGRATION - Check if instancing should be used */
+		var zmolddefForInstancing = {
+			moldtype: zshape,
+			moldname: zmoldname,
+			subdivisions: zsubdivisions,
+			special1: zspecial1,
+			special2: zspecial2,
+			physics: zmolddef.physics,
+			animations: zmolddef.animations
+		};
+		
+		// Try to get instance from pool first
+		zmold = WTW.getInstanceFromPool(zmoldname, zmolddefForInstancing);
+		
 		/* select the function to create the mold based on 'shape' which is the mold type */
-		switch (zshape) {
-			case 'wall':
-				/* wall - a box set with defaults for common scaling */
-				zmold = WTW.addMoldBox(zmoldname, zlenx, zleny, zlenz);
-				break;
-			case 'box':
-				/* box - a basic cube shape of various scaling */
-				zmold = WTW.addMoldBox(zmoldname, zlenx, zleny, zlenz);
-				break;
+		if (zmold == null) {
+			// Instancing not applicable or failed, create normal mesh
+			switch (zshape) {
+				case 'wall':
+					/* wall - a box set with defaults for common scaling */
+					zmold = WTW.addMoldBox(zmoldname, zlenx, zleny, zlenz);
+					break;
+				case 'box':
+					/* box - a basic cube shape of various scaling */
+					zmold = WTW.addMoldBox(zmoldname, zlenx, zleny, zlenz);
+					break;
 			case 'roundedbox':
 				/* roundedbox - a basic cube with round corners and various scaling */
 				zmold = WTW.addMoldRoundedBox(zmoldname, zlenx, zleny, zlenz);
@@ -382,12 +398,21 @@ WTWJS.prototype.addMold = function(zmoldname, zmolddef, zparentname, zcoveringna
 				zmold = WTW.addMoldBlogPosting(zmoldname, zmolddef, zlenx, zleny, zlenz);
 				zcoveringname = 'none';
 				break;
-			default:
-				/* checks plugins for mold shape and custom functions */
-				zmold = WTW.pluginsAddMolds(zshape, zmoldname, zmolddef, zlenx, zleny, zlenz);
-				zcoveringname = 'none';
-				break;
+				default:
+					/* checks plugins for mold shape and custom functions */
+					zmold = WTW.pluginsAddMolds(zshape, zmoldname, zmolddef, zlenx, zleny, zlenz);
+					zcoveringname = 'none';
+					break;
+			}
 		}
+		
+		/* PHASE 1.2: INSTANCE TRANSFORMATION - Apply transforms if we got an instance */
+		if (zmold != null && zmold.metadata && zmold.metadata.isInstance) {
+			// Apply scaling, position, rotation to instance
+			zmold.scaling = new BABYLON.Vector3(zlenx, zleny, zlenz);
+			// Position and rotation will be applied in completeMold
+		}
+		
 		/* apply the coverings, properties, shadows, physics, etc... */
 		zmold = WTW.completeMold(zmold, zmoldname, zparentname, zmolddef, zcoveringname, zposx, zposy, zposz);
 		if (zshape != 'babylonfile') {
