@@ -4112,45 +4112,54 @@ WTWJS.prototype.createOptimizedMaterial = function(materialDef) {
 };
 
 WTWJS.prototype.getMaterialFromPool = function(materialDef, usePBR) {
-	/* Gets a material from the pool or creates a new one if needed */
+	/* Gets a material from the pool or creates a new one if needed - ALWAYS returns a material */
 	try {
-		if (!this.optimizationEnabled) {
-			return this.createOptimizedMaterial(materialDef);
+		// Always create a material - either from pool or new
+		var material = null;
+		
+		if (this.optimizationEnabled && materialDef) {
+			var key = this.generateMaterialKey(materialDef);
+			if (usePBR) {
+				key += '_pbr';
+			}
+			
+			// Check if material exists in pool
+			if (this.materialPool[key]) {
+				this.materialStats.reused++;
+				return this.materialPool[key];
+			}
+			
+			// Create new material for pool
+			if (usePBR && this.supportsPBR && this.supportsPBR()) {
+				material = this.createPBRMaterial(materialDef);
+			} else {
+				material = this.createOptimizedMaterial(materialDef);
+			}
+			
+			// Add to pool if creation succeeded
+			if (material) {
+				this.materialPool[key] = material;
+				this.materialStats.created++;
+				this.materialStats.poolSize = Object.keys(this.materialPool).length;
+				this.materialStats.memoryMB = this.materialStats.poolSize * 0.1;
+			}
 		}
 		
-		var key = this.generateMaterialKey(materialDef);
-		if (usePBR) {
-			key += '_pbr';
+		// If pooling is disabled or failed, create a basic material
+		if (!material) {
+			material = this.createOptimizedMaterial(materialDef || {});
 		}
-		
-		// Check if material exists in pool
-		if (this.materialPool[key]) {
-			this.materialStats.reused++;
-			return this.materialPool[key];
-		}
-		
-		// Create new material
-		var material;
-		if (usePBR && this.supportsPBR && this.supportsPBR()) {
-			material = this.createPBRMaterial(materialDef);
-		} else {
-			material = this.createOptimizedMaterial(materialDef);
-		}
-		
-		// Add to pool
-		this.materialPool[key] = material;
-		this.materialStats.created++;
-		this.materialStats.poolSize = Object.keys(this.materialPool).length;
-		
-		// Estimate memory usage (rough calculation)
-		this.materialStats.memoryMB = this.materialStats.poolSize * 0.1; // ~100KB per material
 		
 		return material;
 		
 	} catch (ex) {
 		WTW.log('core-scripts-prime-wtw_utilities.js-getMaterialFromPool=' + ex.message);
-		// Fallback to creating new material
-		return this.createOptimizedMaterial(materialDef);
+		// Emergency fallback - create basic material
+		try {
+			return new BABYLON.StandardMaterial('fallback_' + Date.now(), scene);
+		} catch (ex2) {
+			return null; // Last resort
+		}
 	}
 };
 
@@ -4566,10 +4575,21 @@ WTWJS.prototype.getOptimizationStats = function() {
 /* TEXTURE POOLING SYSTEM - 30-50% Load Time Reduction */
 
 WTWJS.prototype.getTextureFromPool = function(textureUrl, scene) {
-	/* Gets a texture from the pool or creates a new one if needed */
+	/* Gets a texture from the pool or creates a new one if needed - returns texture or null for fallback */
 	try {
-		if (!this.optimizationEnabled || !textureUrl || textureUrl === '' || textureUrl === 'none') {
+		// Return null for invalid inputs - caller should handle fallback
+		if (!textureUrl || textureUrl === '' || textureUrl === 'none') {
 			return null;
+		}
+		
+		// Skip pooling for base64 textures - they're handled specially by caller
+		if (textureUrl.startsWith('base64_')) {
+			return null; // Caller will handle base64 creation
+		}
+		
+		// Only pool regular file-based textures if optimization is enabled
+		if (!this.optimizationEnabled) {
+			return null; // Caller will create texture normally
 		}
 		
 		var key = 'tex_' + this.hashString(textureUrl);
@@ -4580,17 +4600,8 @@ WTWJS.prototype.getTextureFromPool = function(textureUrl, scene) {
 			return this.texturePool[key];
 		}
 		
-		// Create new texture
-		var texture = null;
-		
-		if (textureUrl.startsWith('base64_')) {
-			// Handle base64 textures - these need special processing
-			// For now, return null to use fallback creation
-			return null;
-		} else {
-			// Create regular file-based texture
-			texture = new BABYLON.Texture(textureUrl, scene);
-		}
+		// Create new file-based texture for pool
+		var texture = new BABYLON.Texture(textureUrl, scene);
 		
 		if (texture) {
 			// Apply optimization settings
@@ -4602,16 +4613,14 @@ WTWJS.prototype.getTextureFromPool = function(textureUrl, scene) {
 			this.texturePool[key] = texture;
 			this.textureStats.loaded++;
 			this.textureStats.poolSize = Object.keys(this.texturePool).length;
-			
-			// Estimate memory usage (rough calculation)
-			this.textureStats.totalSizeMB = this.textureStats.poolSize * 0.5; // ~500KB per texture average
+			this.textureStats.totalSizeMB = this.textureStats.poolSize * 0.5;
 		}
 		
 		return texture;
 		
 	} catch (ex) {
 		WTW.log('core-scripts-prime-wtw_utilities.js-getTextureFromPool=' + ex.message);
-		return null;
+		return null; // Caller will handle fallback
 	}
 };
 

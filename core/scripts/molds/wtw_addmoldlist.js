@@ -205,11 +205,24 @@ WTWJS.prototype.addMold = function(zmoldname, zmolddef, zparentname, zcoveringna
 		zposx = ztransformposition.posx;
 		zposy = ztransformposition.posy;
 		zposz = ztransformposition.posz;
-		/* EMERGENCY FIX: Disable geometry instancing temporarily to restore functionality */
-		/* TODO: Fix instancing logic - was potentially interfering with normal mesh creation */
+		/* PROPER FIX: Geometry instancing with correct fallback logic */
+		var zmolddefForInstancing = {
+			moldtype: zshape,
+			moldname: zmoldname,
+			subdivisions: zsubdivisions,
+			special1: zspecial1,
+			special2: zspecial2,
+			physics: zmolddef.physics,
+			animations: zmolddef.animations
+		};
+		
+		// Try to get instance from pool first - will return null if not applicable
+		zmold = WTW.getInstanceFromPool(zmoldname, zmolddefForInstancing);
 		
 		/* select the function to create the mold based on 'shape' which is the mold type */
-		switch (zshape) {
+		if (zmold == null) {
+			// Instancing not applicable or failed, create normal mesh
+			switch (zshape) {
 				case 'wall':
 					/* wall - a box set with defaults for common scaling */
 					zmold = WTW.addMoldBox(zmoldname, zlenx, zleny, zlenz);
@@ -385,11 +398,18 @@ WTWJS.prototype.addMold = function(zmoldname, zmolddef, zparentname, zcoveringna
 				zmold = WTW.addMoldBlogPosting(zmoldname, zmolddef, zlenx, zleny, zlenz);
 				zcoveringname = 'none';
 				break;
-			default:
-				/* checks plugins for mold shape and custom functions */
-				zmold = WTW.pluginsAddMolds(zshape, zmoldname, zmolddef, zlenx, zleny, zlenz);
-				zcoveringname = 'none';
-				break;
+				default:
+					/* checks plugins for mold shape and custom functions */
+					zmold = WTW.pluginsAddMolds(zshape, zmoldname, zmolddef, zlenx, zleny, zlenz);
+					zcoveringname = 'none';
+					break;
+			}
+		}
+		
+		/* PROPER FIX: Apply transforms if we got an instance */
+		if (zmold != null && zmold.metadata && zmold.metadata.isInstance) {
+			// Apply scaling to instance - position and rotation handled in completeMold
+			zmold.scaling = new BABYLON.Vector3(zlenx, zleny, zlenz);
 		}
 		
 		/* apply the coverings, properties, shadows, physics, etc... */
@@ -601,13 +621,15 @@ WTWJS.prototype.completeMold = function(zmold, zmoldname, zparentname, zmolddef,
 			//	zmold.convertToUnIndexedMesh();
 			//}
 			
-			/* EMERGENCY FIX: Disable LOD system temporarily to restore functionality */
-			/* TODO: Fix LOD system - was potentially interfering with mesh visibility */
-			/* Original LOD code disabled temporarily:
-			if (zmold && zmold.metadata && !zmold.metadata.isInstance && WTW.adminView == 0) {
-				WTW.setupLOD(zmold);
+			/* PROPER FIX: LOD system with safe metadata checking */
+			if (zmold && WTW.adminView == 0) {
+				// Only apply LOD to non-instance meshes in browse mode
+				// Safe metadata checking - instances have metadata.isInstance = true
+				var isInstance = zmold.metadata && zmold.metadata.isInstance;
+				if (!isInstance) {
+					WTW.setupLOD(zmold);
+				}
 			}
-			*/
 			
 			/* cleanup - remove any un-parented molds (sometimes the parent was deleted since the mold started to be created) */
 			if (zparentname != '') {
