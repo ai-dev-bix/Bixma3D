@@ -423,33 +423,10 @@ WTWJS.prototype.initEnvironment = async function() {
 
 	scene.performancePriority = BABYLON.ScenePerformancePriority.Intermediate;
 
-	/* OPTIMIZATION: Scene Optimizer - DEACTIVATED FOR SAFETY */
-	// Scene optimizer was causing black screen - will be reactivated after investigation
-	/*
-	var zoptions = new BABYLON.SceneOptimizerOptions(30, 2000); // Target 30 FPS, 2000ms timeout
-	zoptions.addOptimization(new BABYLON.ShadowsOptimization(0));
-	zoptions.addOptimization(new BABYLON.LensFlaresOptimization(0)); 
-	zoptions.addOptimization(new BABYLON.PostProcessesOptimization(1));
-	zoptions.addOptimization(new BABYLON.ParticlesOptimization(1));
-	zoptions.addOptimization(new BABYLON.TextureOptimization(2, 256)); // Reduce textures to 256x256 if needed
-	zoptions.addOptimization(new BABYLON.RenderTargetsOptimization(3));
-	zoptions.addOptimization(new BABYLON.HardwareScalingOptimization(4, 4)); // Scale down by factor of 4 if needed
-
-	// OPTIMIZATION: Add custom optimization callbacks
-	zoptions.onSuccessObservable.add(() => {
-		WTW.log('Scene optimizer: Target performance achieved', 'green');
-	});
-
-	zoptions.onFailureObservable.add(() => {
-		WTW.log('Scene optimizer: Unable to reach target performance', 'orange');
-	});
-
-	var zoptimizer = new BABYLON.SceneOptimizer(scene, zoptions);
-	zoptimizer.start();
-
-	// OPTIMIZATION: Store optimizer reference for manual control
-	WTW.sceneOptimizer = zoptimizer;
-	*/		
+	/* OPTIMIZATION: Scene Optimizer - PHASE 1 IMPLEMENTATION */
+	// Initialize Scene Optimizer with safe settings to avoid black screen issues
+	// Scene optimizer will be available but not auto-started for safety
+	WTW.initSceneOptimizer();		
 		/* scene light setting  */
 		scene.ambientColor = new BABYLON.Color3.FromHexString(WTW.init.sceneAmbientColor);
 		scene.clearColor = new BABYLON.Color3.FromHexString(WTW.init.sceneClearColor); 
