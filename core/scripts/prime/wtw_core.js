@@ -1772,17 +1772,6 @@ WTWJS.prototype.startRender = function() {
 					scene.render();
 				} catch(ex) {}
 				try {
-					/* PROPER FIX: LOD render loop updates with safe execution */
-					if (WTW.lodUpdateTimer === undefined) {
-						WTW.lodUpdateTimer = 0;
-					}
-					
-					WTW.lodUpdateTimer += engine.getDeltaTime();
-					if (WTW.lodUpdateTimer >= WTW.lodConfig.updateInterval) {
-						WTW.updateLOD();
-						WTW.lodUpdateTimer = 0;
-					}
-					
 					/* plugin hook so plugins can add code to the render loop */
 					WTW.pluginsRenderloop();
 					/* the following function in the render loop is for driving a vehicle*/

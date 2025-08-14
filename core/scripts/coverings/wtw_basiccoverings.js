@@ -337,53 +337,22 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 				}
 			}
 		}
-		WTW.disposeMaterial('mat' + zmoldname);
-		
-		/* PHASE 1.1: MATERIAL POOLING INTEGRATION - Extract material definition for pooling */
-		var zmaterialDef = {
-			diffuseColor: zdiffusecolor,
-			emissiveColor: zemissivecolor,
-			specularColor: zspecularcolor,
-			ambientColor: zambientcolor,
-			diffuseTexture: (ztexturepath !== '' ? ztexturepath : (zimageid !== '' ? 'base64_' + zimageid : 'none')),
-			bumpTexture: (zbumppath !== '' ? zbumppath : (zbumpid !== '' ? 'base64_' + zbumpid : 'none')),
-			opacity: zmolddef && zmolddef.opacity ? Number(zmolddef.opacity) / 100 : 1.0
-		};
-		
-		// PROPER FIX: Use material pooling with correct logic
-		zcovering = WTW.getMaterialFromPool(zmaterialDef);
-		
-		// getMaterialFromPool() now always returns a material (pooled or new)
-		// If it's a new material, we need to apply the color properties
-		// If it's a pooled material, the colors are already set
-		if (!zcovering.diffuseColor || zcovering.diffuseColor.equals(BABYLON.Color3.White())) {
-			// This is a new material, apply the colors
-			zcovering.diffuseColor = new BABYLON.Color3.FromHexString(zdiffusecolor);
-			zcovering.emissiveColor = new BABYLON.Color3.FromHexString(zemissivecolor);
-			zcovering.specularColor = new BABYLON.Color3.FromHexString(zspecularcolor);
-			zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
-		}
+		WTW.disposeMaterial('mat' + zmoldname);		
+		zcovering = new BABYLON.StandardMaterial('mat' + zmoldname, scene);
+		zcovering.diffuseColor = new BABYLON.Color3.FromHexString(zdiffusecolor);
+		zcovering.emissiveColor = new BABYLON.Color3.FromHexString(zemissivecolor);
+		zcovering.specularColor = new BABYLON.Color3.FromHexString(zspecularcolor);
+		zcovering.ambientColor = new BABYLON.Color3.FromHexString(zambientcolor);
 
-		/* PROPER FIX: Use texture pooling with correct fallback logic */
 		var zimageextension = '';
 		if (ztexturepath == '') {
 			var zimageinfo = WTW.getUploadFileData(zimageid);
 			zimageextension = zimageinfo.extension;
-			// Base64 textures are not pooled - create directly
 			zcovering.diffuseTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfo.image.src, 'mattexture' + zimageid, scene);
 		} else {
-			// Try to get texture from pool first
-			zcovering.diffuseTexture = WTW.getTextureFromPool(ztexturepath, scene);
-			if (!zcovering.diffuseTexture) {
-				// Pool returned null (disabled or not applicable), create normally
-				zcovering.diffuseTexture = new BABYLON.Texture(ztexturepath, scene);
-			}
-			
+			zcovering.diffuseTexture = new BABYLON.Texture(ztexturepath, scene);
 			if (zmoldname.indexOf('-mainimage') > -1) {
-				zcovering.emissiveTexture = WTW.getTextureFromPool(ztexturepath, scene);
-				if (!zcovering.emissiveTexture) {
-					zcovering.emissiveTexture = new BABYLON.Texture(ztexturepath, scene);
-				}
+				zcovering.emissiveTexture = new BABYLON.Texture(ztexturepath, scene);
 			}
 			zimageextension = ztexturepath.substr(ztexturepath.length - 3).toLowerCase();
 		}
@@ -396,14 +365,9 @@ WTWJS.prototype.addCoveringTexture = function(zmoldname, zmolddef, zlenx, zleny,
 		}	
 		if (zbumpid != '' || zbumppath != '') {
 			if (zbumppath != '') {
-				// Try to get bump texture from pool first
-				zcovering.bumpTexture = WTW.getTextureFromPool(zbumppath, scene);
-				if (!zcovering.bumpTexture) {
-					zcovering.bumpTexture = new BABYLON.Texture(zbumppath, scene);
-				}
+				zcovering.bumpTexture = new BABYLON.Texture(zbumppath, scene);
 			} else {
 				var zimageinfobump = WTW.getUploadFileData(zbumpid);
-				// Base64 bump textures are not pooled - create directly
 				zcovering.bumpTexture = new BABYLON.Texture.CreateFromBase64String(zimageinfobump.image.src, 'mattexture' + zbumpid, scene);
 			}
 			zcovering.bumpTexture.uScale = zuscale;
